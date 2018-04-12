@@ -15,6 +15,7 @@ void SceneManager::draw(QPainter& painter) const {
 	for (const auto& item: this->balls) {
 		item->draw(painter);
 	}
+	painter.translate(-offset);
 }
 
 QSize SceneManager::veiwPort() const {

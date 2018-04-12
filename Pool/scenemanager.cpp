@@ -7,9 +7,10 @@ QVector2D isTouching(const Ball&, const Ball&);
 QVector2D isTouching(const Table&, const Ball&);
 
 SceneManager::SceneManager(unique_ptr<Table> poolTable, vector<unique_ptr<Ball>>& initBalls)
-: table(std::move(poolTable)), balls(std::move(initBalls)) {}
+: table(std::move(poolTable)), balls(std::move(initBalls)), offset(20, 20) {}
 
 void SceneManager::draw(QPainter& painter) const {
+	painter.translate(offset);
 	this->table->draw(painter);
 	for (const auto& item: this->balls) {
 		item->draw(painter);
@@ -17,7 +18,7 @@ void SceneManager::draw(QPainter& painter) const {
 }
 
 QSize SceneManager::veiwPort() const {
-	return this->table->dimension;
+	return this->table->dimension + QSize(this->offset.x(), this->offset.y())*2;
 }
 
 void SceneManager::tick(float dtime) {

@@ -51,7 +51,7 @@ DISTFILES += \
 
 copyconfig.depends = ../Pool/config.json
 copyconfig.commands = \
-    $(COPY_FILE) ../Pool/config.json .
+	$(COPY_FILE) \"$$shell_path($$PWD\\config.json)\" .
 
 first.depends = all copyconfig
 QMAKE_EXTRA_TARGETS += first copyconfig

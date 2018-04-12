@@ -14,6 +14,5 @@ using std::shared_ptr;
 using std::vector;
 
 const QVector2D NULL_2D;
-const double FRAME_TIME = 1.0 / FRAME_RATE;
 
 #endif // UTIL_H

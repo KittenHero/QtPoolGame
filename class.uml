@@ -1,13 +1,15 @@
 @startuml
 
 class MainWindow {
-	-QTimer clock;
+	-QTimer updater;
+	-QTimer ticker;
 	-QElapsedTimer timer;
 	-SceneManager scene;
 	--
 	+void paintEvent(QPaintEvent event);
 	--slots--
 	+void tick();
+	+void nextFrame();
 }
 
 class SceneBuilder {
@@ -36,6 +38,7 @@ together {
 	class SceneManager {
 		-Table table;
 		-vector<Ball> balls;
+		-QPoint offset;
 
 		QSize viewPort();
 		void tick(float dtime);

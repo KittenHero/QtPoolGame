@@ -27,10 +27,13 @@ public:
     ~MainWindow();
 public slots:
 	/**
-	 * @brief for main loop logic
-	 *        controls when to update the frame
+	 * @brief move the scene by a small timestep
 	 */
 	void tick();
+	/**
+	 * @brief draws the next frame
+	 */
+	void nextFrame();
 
 protected:
 /**
@@ -41,8 +44,8 @@ protected:
 	void paintEvent(QPaintEvent* event);
 
 private:
-	double last_tick;
-	QTimer clock;
+	QTimer updater;
+	QTimer ticker;
 	QElapsedTimer timer;
 	unique_ptr<SceneManager> scene;
 };

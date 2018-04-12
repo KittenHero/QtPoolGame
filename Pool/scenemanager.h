@@ -45,6 +45,7 @@ public:
 private:
 	unique_ptr<Table> table;
 	vector<unique_ptr<Ball>> balls;
+	QPoint offset;
 };
 
 #endif // SCENEMANAGER_H

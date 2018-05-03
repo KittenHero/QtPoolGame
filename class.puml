@@ -1,0 +1,118 @@
+@startuml
+
+class Dialog {
+    PoolGame m_game
+    QTimer m_framerateTimer
+    QTimer m_timestepTimer
+    --
+    +void start()
+    +void paintEvent(QPaintEvent)
+    --slots--
+    +void runSimulationStep()
+    
+}
+
+class PoolGame {
+    -Table m_table
+    -vector<Ball> m_ball
+
+    +simulateTimeStep(float)
+    +void draw(QPainter)
+    +QSize size()
+    -void collision(Ball, Ball)
+    -void collision(Table, Ball)
+}
+
+abstract class Ball <<abstract>> {
+    #QVector2D m_position
+    #QVector2D m_velocity
+    #float m_radius
+    #float m_mass
+    
+    +{abstract} void changePosition(QVector2D deltaP)
+    +{abstract} void changeVelocity(QVector2D deltaX)
+    +{abstract} void daw(QPainter)
+    +{abstract} void move(float dtime)
+    +various getters() and setters()
+}
+
+abstract class Table <<abstract>> {
+    #float m_width
+    #float m_height
+    #float m_friction
+    
+    +{abstract} void daw(QPainter)
+    +various getters()
+}
+
+class StageOneBall {
+    -QColor m_colour
+    
+    +void setColor(QColor)
+    +const QColor& colour()
+}
+
+class StageOneTable {
+    -QColor m_colour
+    +void draw(QPainter)
+}
+
+interface AbstractFactory <<interface>> {
+    +{abstract} Ball makeBall(QJsonObject spec)
+    +{abstract} Table makeTable(QJsonObject spec)
+}
+
+class StageOneFactory {
+    +Ball makeBall(QJsonObject spec)
+    +Table makeTAble(QJsonObject spec)
+}
+
+class GameBuilder {
+    -Table m_table
+    -vector<Ball> m_ball
+    -AbstractFactory m_factory
+    
+    +void addBall(QJsonObject spec)
+    +void buildTable(QJsonObject spec)
+    +PoolGame getGame()
+}
+
+class Initializer {
+    +PoolGame createPoolgame(string config)
+}
+
+Dialog          --->    PoolGame
+PoolGame        --->    Table
+PoolGame        --->    Ball
+Table           <|..    StageOneTable
+Ball            <|..    StageOneBall
+
+AbstractFactory <|..    StageOneFactory
+StageOneFactory ...>    StageOneBall
+StageOneFactory ...>    StageOneTable
+
+Initializer     --->    GameBuilder
+
+GameBuilder     --->    AbstractFactory
+GameBuilder     ...>    PoolGame
+
+class Key #ffee77 {
+	+public
+	#protected
+	-private
+	+publiic method()
+	#protected method()
+	-private method()
+	{abstract} virtual method()
+	(x) extended code
+}
+
+skinparam Class {
+	BackgroundColor<<abstract>> PaleGreen
+	BackgroundColor<<interface>> PowderBlue
+}
+
+hide circle
+hide empty members
+
+@enduml

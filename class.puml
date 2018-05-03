@@ -1,13 +1,7 @@
 @startuml
 
-interface AbstractFactory <<interface>> {
-    +{abstract} Ball makeBall(QJsonObject spec)
-    +{abstract} Table makeTable(QJsonObject spec)
-}
-
-class StageOneFactory {
-    +Ball makeBall(QJsonObject spec)
-    +Table makeTAble(QJsonObject spec)
+class Initializer {
+    +PoolGame createPoolgame(string path)
 }
 
 class GameBuilder {
@@ -20,8 +14,19 @@ class GameBuilder {
     +PoolGame getGame()
 }
 
-class Initializer {
-    +PoolGame createPoolgame(string path)
+interface AbstractFactory <<interface>> {
+    +{abstract} Ball makeBall(QJsonObject spec)
+    +{abstract} Table makeTable(QJsonObject spec)
+}
+
+class StageOneFactory {
+    +Ball makeBall(QJsonObject spec)
+    +Table makeTAble(QJsonObject spec)
+}
+
+class StageTwoFactory {
+    +Ball makeBall(QJsonObject spec)
+    +Table makeTAble(QJsonObject spec)
 }
 
 class Dialog {
@@ -31,12 +36,19 @@ class Dialog {
     --
     +void start()
     +void paintEvent(QPaintEvent)
+    #void
     --slots--
     +void runSimulationStep()
     
 }
 
-class PoolGame {
+abstract PoolGame <<abstract>> {
+    +{abstract} void simulateTimeStep(float)
+    +{abstract} void draw(QPainter)
+    +{abstract} void handleEvent(QEvent)
+}
+
+class BasePool {
     -Table m_table
     -vector<Ball> m_ball
 
@@ -45,6 +57,37 @@ class PoolGame {
     +QSize size()
     -void collision(Ball, Ball)
     -void collision(Table, Ball)
+}
+
+abstract GameFeature <<abstract>> {
+    -PoolGame m_game
+    +void draw(QPainter)
+    +void simulateTimeStep(float)
+    +void handleEvent(QEvent)
+}
+
+class CueBallControlFeature {
+    -Ball* m_cueball
+    -Pair<QVector2D, QVector2D> m_clickCoord
+    +void handleEvent(QEvent)
+    +void simulateTimeStep(float)
+    +void draw(QPainter)
+}
+
+class ExplodingBallFeature {
+    -PoolGame m_game
+    -Ball* m_cueball
+    +void handleEvent(QEvent)
+    +void simulateTimeStep(float)
+    +void draw(QPainter)
+}
+
+class PocketInteractionFeature {
+    -PoolGame m_game
+    -Ball* m_cueball
+    +void handleEvent(QEvent)
+    +void simulateTimeStep(float)
+    +void draw(QPainter)
 }
 
 abstract class Ball <<abstract>> {
@@ -76,25 +119,62 @@ class StageOneBall {
     +const QColor& colour()
 }
 
+class MatryoshkaBall {
+    -QColor m_colour
+    -vector<Ball> m_nested
+    -{static} boolean m_showNested
+    
+    +void draw(QPainter)
+    +void setColor(QColor)
+    +{static} void toggleInnerVisibility()
+}
+
 class StageOneTable {
     -QColor m_colour
     +void draw(QPainter)
 }
 
+class PocketedTable {
+    -vector<Pair<QVector2D, float>> m_pockets
+    -QColor m_color
+    
+    +void draw(QPainter)
+    +void addPocket(QVector2D centre, float radius)
+    +void clearPockets()
+}
+
 Initializer     --->    GameBuilder
 
-GameBuilder     *---    AbstractFactory
-GameBuilder     ...>    PoolGame
-
 Dialog          *---    PoolGame
-PoolGame        *---    Table
-PoolGame        *---    Ball
-Table           <|..    StageOneTable
-Ball            <|..    StageOneBall
+BasePool        *---    Table
+BasePool        *---    Ball
 
-AbstractFactory <|..    StageOneFactory
-StageOneFactory ...>    StageOneBall
-StageOneFactory ...>    StageOneTable
+PoolGame        <|--    BasePool
+
+PoolGame        <|--    GameFeature
+GameFeature     *---    PoolGame
+
+GameFeature     <|--    CueBallControlFeature
+GameFeature     <|--    PocketInteractionFeature
+GameFeature     <|--    ExplodingBallFeature
+
+Table           <|..    StageOneTable
+Table           <|..    PocketedTable
+Ball            <|..    StageOneBall
+Ball            <|..    MatryoshkaBall
+MatryoshkaBall  ---*    Ball
+
+AbstractFactory ---*    GameBuilder
+PoolGame        <...    GameBuilder
+
+StageOneFactory ..|>    AbstractFactory
+StageTwoFactory ..|>    AbstractFactory
+
+StageOneBall    <...    StageOneFactory
+StageOneTable   <...    StageOneFactory
+
+PocketedTable   <...    StageTwoFactory
+MatryoshkaBall  <...    StageTwoFactory
 
 
 class Key #ffee77 {
@@ -105,7 +185,7 @@ class Key #ffee77 {
 	#protected method()
 	-private method()
 	{abstract} virtual method()
-	(x) extended code
+	{static} static
 }
 
 skinparam Class {

@@ -81,10 +81,9 @@ class StageOneTable {
     +void draw(QPainter)
 }
 
-
 Initializer     --->    GameBuilder
 
-GameBuilder     --->    AbstractFactory
+GameBuilder     *---    AbstractFactory
 GameBuilder     ...>    PoolGame
 
 Dialog          *---    PoolGame

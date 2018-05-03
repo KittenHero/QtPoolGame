@@ -1,6 +1,6 @@
 # Qt PoolTable
 
-![class diagram](class.png)
+![previous class diagram](old_class.png)
 
 ## Todo:
 

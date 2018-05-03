@@ -15,4 +15,4 @@
 - abstract factory is not informative name
 - Initializer has no state and one method
 - Wildly inconsistent spacing around operators and variables
-- So many memory leaks
+- memory leaks

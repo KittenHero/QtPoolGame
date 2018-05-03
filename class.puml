@@ -1,5 +1,29 @@
 @startuml
 
+interface AbstractFactory <<interface>> {
+    +{abstract} Ball makeBall(QJsonObject spec)
+    +{abstract} Table makeTable(QJsonObject spec)
+}
+
+class StageOneFactory {
+    +Ball makeBall(QJsonObject spec)
+    +Table makeTAble(QJsonObject spec)
+}
+
+class GameBuilder {
+    -Table m_table
+    -vector<Ball> m_ball
+    -AbstractFactory m_factory
+    
+    +void addBall(QJsonObject spec)
+    +void buildTable(QJsonObject spec)
+    +PoolGame getGame()
+}
+
+class Initializer {
+    +PoolGame createPoolgame(string config)
+}
+
 class Dialog {
     PoolGame m_game
     QTimer m_framerateTimer
@@ -57,33 +81,15 @@ class StageOneTable {
     +void draw(QPainter)
 }
 
-interface AbstractFactory <<interface>> {
-    +{abstract} Ball makeBall(QJsonObject spec)
-    +{abstract} Table makeTable(QJsonObject spec)
-}
 
-class StageOneFactory {
-    +Ball makeBall(QJsonObject spec)
-    +Table makeTAble(QJsonObject spec)
-}
+Initializer     --->    GameBuilder
 
-class GameBuilder {
-    -Table m_table
-    -vector<Ball> m_ball
-    -AbstractFactory m_factory
-    
-    +void addBall(QJsonObject spec)
-    +void buildTable(QJsonObject spec)
-    +PoolGame getGame()
-}
+GameBuilder     --->    AbstractFactory
+GameBuilder     ...>    PoolGame
 
-class Initializer {
-    +PoolGame createPoolgame(string config)
-}
-
-Dialog          --->    PoolGame
-PoolGame        --->    Table
-PoolGame        --->    Ball
+Dialog          *---    PoolGame
+PoolGame        *---    Table
+PoolGame        *---    Ball
 Table           <|..    StageOneTable
 Ball            <|..    StageOneBall
 
@@ -91,10 +97,6 @@ AbstractFactory <|..    StageOneFactory
 StageOneFactory ...>    StageOneBall
 StageOneFactory ...>    StageOneTable
 
-Initializer     --->    GameBuilder
-
-GameBuilder     --->    AbstractFactory
-GameBuilder     ...>    PoolGame
 
 class Key #ffee77 {
 	+public

@@ -1,30 +1,6 @@
 @startuml
 
 together {
-    class Initializer {
-        +PoolGame createPoolgame(string path)
-    }
-    
-    class GameBuilder {
-        -m_table : Table
-        -m_ball : vector<Ball>
-        -m_factory : AbstractFactory
-        
-        +addBall(QJsonObject spec) : void
-        +buildTable(QJsonObject spec) : void
-        +getGame() : PoolGame
-    }
-    
-    interface AbstractFactory <<interface>> {
-        +{abstract} Ball makeBall(QJsonObject spec) :
-        +{abstract} Table makeTable(QJsonObject spec) :
-    }
-    
-    class StageOneFactory {
-        +makeBall(QJsonObject spec) : Ball
-        +makeTable(QJsonObject spec) : Table
-    }
-    
     class Dialog {
         -m_game : PoolGame
         -m_framerateTimer : QTimer
@@ -45,14 +21,6 @@ together {
         +{abstract} simulateTimeStep(float) : void
         +{abstract} draw(QPainter) : void
         +{abstract} handleEvent(QEvent) : void
-    }
-    
-    class BasePool {
-        +simulateTimeStep(float) : void
-        +draw(QPainter) : void
-        +size() : QSize
-        -collision(Ball, Ball) : void
-        -collision(Table, Ball) : void
     }
     
     abstract class Ball <<abstract>> {
@@ -77,27 +45,55 @@ together {
         +various getters()
     }
     
+    class BasePool {
+        +simulateTimeStep(float) : void
+        +draw(QPainter) : void
+        +size() : QSize
+        -collision(Ball, Ball) : void
+        -collision(Table, Ball) : void
+    }
+    
     class StageOneBall {
         -m_colour : QColor
         +setColor(QColor) : void
         +colour() : const QColor&
     }
     
-    
     class StageOneTable {
         -m_colour : QColor
         +draw(QPainter) : void
     }
     
-}
-
-together {
-
-    class StageTwoFactory {
-        + makeBall(QJsonObject spec) : Ball
-        + makeTAble(QJsonObject spec) : Table
+    
+    class Initializer {
+        +PoolGame createPoolgame(string path)
     }
-
+    
+    class GameBuilder {
+        -m_table : Table
+        -m_ball : vector<Ball>
+        -m_factory : AbstractFactory
+        
+        +addBall(QJsonObject spec) : void
+        +buildTable(QJsonObject spec) : void
+        +getGame() : PoolGame
+    }
+    
+    interface AbstractFactory <<interface>> {
+        +{abstract} Ball makeBall(QJsonObject spec) :
+        +{abstract} Table makeTable(QJsonObject spec) :
+    }
+    
+    class StageOneFactory {
+        +makeBall(QJsonObject spec) : Ball
+        +makeTable(QJsonObject spec) : Table
+    }
+    
+    
+}
+    
+together {
+    
     abstract GameFeature <<abstract>> {
         -m_game : PoolGame
         +draw(QPainter) : void
@@ -132,6 +128,7 @@ together {
         
         +draw(QPainter) : void
         +setColor(QColor) : void
+        +nestedBalls() : vector<Ball>&
         +{static} toggleInnerVisibility() : void
     }
     
@@ -143,32 +140,36 @@ together {
         +addPocket(QVector2D centre, float radius) : void
         +clearPockets() : void
     }
+    class StageTwoFactory {
+        + makeBall(QJsonObject spec) : Ball
+        + makeTAble(QJsonObject spec) : Table
+    }
 }
 
 Initializer                 --->    GameBuilder
 
 Dialog                      *---    PoolGame
-PoolGame                    *---    Table
 PoolGame                    *---    Ball
+PoolGame                    *---    Table
 
+PoolGame                    <|-r    BasePool
 PoolGame                    <|--    GameFeature
-PoolGame                    <|--    BasePool
+PoolGame                    -r-*    GameFeature
 
-GameFeature                 *---    PoolGame
-GameFeature                 <|--    CueBallControlFeature
+GameFeature                 <|-l    CueBallControlFeature
 GameFeature                 <|--    PocketInteractionFeature
 GameFeature                 <|--    ExplodingBallFeature
 
-Table                       <|..    StageOneTable
-Table                       <|..    PocketedTable
 Ball                        <|..    StageOneBall
 Ball                        <|..    MatryoshkaBall
-MatryoshkaBall              ---*    Ball
+Ball                        ---*    MatryoshkaBall
+Table                       <|..    StageOneTable
+Table                       <|..    PocketedTable
 
 ExplodingBallFeature        --->    MatryoshkaBall
 PocketInteractionFeature    --->    PocketedTable
 
-AbstractFactory             ---*    GameBuilder
+GameBuilder                 *---    AbstractFactory
 GameBuilder                 ...>    PoolGame
 
 StageOneFactory             ..|>    AbstractFactory
@@ -179,18 +180,19 @@ StageOneTable               <...    StageOneFactory
 
 PocketedTable               <...    StageTwoFactory
 MatryoshkaBall              <...    StageTwoFactory
-together {
-    class Key #ffee77 {
-    	+public
-    	#protected
-    	-private
-    	+publiic method()
-    	#protected method()
-    	-private method()
-    	{abstract} virtual method()
-    	{static} static
-    }
+
+class Key #ffee77 {
+	+public
+	#protected
+	-private
+	+publiic method()
+	#protected method()
+	-private method()
+	{abstract} virtual method()
+	{static} static
 }
+
+Key -[hidden]- GameFeature
 
 skinparam Class {
 	BackgroundColor<<abstract>> PaleGreen

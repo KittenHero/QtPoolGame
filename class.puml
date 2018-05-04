@@ -1,6 +1,6 @@
 @startuml
 
-package stageone {
+together {
     class Initializer {
         +PoolGame createPoolgame(string path)
     }
@@ -91,7 +91,7 @@ package stageone {
     
 }
 
-package stagetwo {
+together {
 
     class StageTwoFactory {
         + makeBall(QJsonObject spec) : Ball
@@ -126,6 +126,7 @@ package stagetwo {
     
     class MatryoshkaBall {
         -m_colour : QColor
+        -m_strength : double
         -m_nested : vector<Ball>
         -{static} m_showNested : boolean
         
@@ -143,6 +144,7 @@ package stagetwo {
         +clearPockets() : void
     }
 }
+
 Initializer                 --->    GameBuilder
 
 Dialog                      *---    PoolGame
@@ -167,7 +169,7 @@ ExplodingBallFeature        --->    MatryoshkaBall
 PocketInteractionFeature    --->    PocketedTable
 
 AbstractFactory             ---*    GameBuilder
-PoolGame                    <...    GameBuilder
+GameBuilder                 ...>    PoolGame
 
 StageOneFactory             ..|>    AbstractFactory
 StageTwoFactory             ..|>    AbstractFactory
@@ -177,17 +179,17 @@ StageOneTable               <...    StageOneFactory
 
 PocketedTable               <...    StageTwoFactory
 MatryoshkaBall              <...    StageTwoFactory
-
-
-class Key #ffee77 {
-	+public
-	#protected
-	-private
-	+publiic method()
-	#protected method()
-	-private method()
-	{abstract} virtual method()
-	{static} static
+together {
+    class Key #ffee77 {
+    	+public
+    	#protected
+    	-private
+    	+publiic method()
+    	#protected method()
+    	-private method()
+    	{abstract} virtual method()
+    	{static} static
+    }
 }
 
 skinparam Class {

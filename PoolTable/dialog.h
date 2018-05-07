@@ -22,17 +22,21 @@ public:
      * @param parent is the parent widget
      */
     explicit Dialog(PoolGame * game, QWidget *parent = 0);
-
+    ~Dialog();
     /**
      * @brief starts the simulation
      */
     void start();
-
+protected:
     /**
      * @brief draws the simulation
      */
     void paintEvent(QPaintEvent *);
-    ~Dialog();
+    /**
+     * @brief process user input
+     * @return wheter the event was recognised
+     */
+    bool event(QEvent *);
 public slots:
     void runSimulationStep();
 private:

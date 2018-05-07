@@ -28,36 +28,46 @@ public:
      * @brief simulate one timestep of the game
      * @param timeStep is the period of time that this timestep is simulating
      */
-    void simulateTimeStep(float timeStep);
+    virtual void simulateTimeStep(float timeStep);
 
     /**
      * @brief draws all elements of the game, table and balls in that order
      * @param p is the painter which is used to paint the object
      */
-    void draw(QPainter &p);
+    virtaul void draw(QPainter &p) const;
+    
+    
+    /**
+     * @brief handles user inputs
+     * @param input events
+     */
+    virtual void handleEvent(QEvent) {}
 
     /**
      * @brief size
      * @return the size of the game
      */
-    QSize size(){return QSize(m_table->width(),m_table->height());}
+    QSize size() const {return QSize(m_table->width(),m_table->height());}
 
 private:
     /**
-     * @brief collide two balls if they are in contact
-     * @param b1
-     * @param b2
+     * @brief checks if two balls overlap
+     * @param a
+     * @param b
+     * @return the vector from ball a to b if they overlap or the zero vector otherwise
      */
-    void collision(Ball &b1, Ball &b2);
+    QVector2D collisionVector(Ball &b1, Ball &b2) const;
 
     /**
-     * @brief collide a ball with a wall if any part of the ball is outside the bounds of the table
+     * @brief check if the ball is within the bounds of the table
      * @param t
      * @param b
+     * @return the basis vector in the direction that should be reflected or zero if ball is in table 
      */
-    void collision(Table &t, Ball &b);
+    QVector2D collisionVector(Table &t, Ball &b) const;
 
     Table * m_table;
+    Ball * m_cueball;
     std::vector<Ball*> m_balls;
 };
 

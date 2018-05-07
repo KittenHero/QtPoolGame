@@ -20,8 +20,8 @@ public:
      * @param m_table a pointer to a Table object, Poolgame takes ownership of this pointer
      * @param balls a vector of pointers to balls, Poolgame takes ownership of all the contained pointers
      */
-    PoolGame(Table * m_table,std::vector<Ball*> balls)
-        :m_table(m_table),m_balls(balls)
+    PoolGame(Table * m_table,std::vector<Ball*> balls, Ball* cueball)
+        :m_table(m_table),m_balls(balls),m_cueball(cueball)
     {}
 
     /**
@@ -80,8 +80,8 @@ private:
     }
     
     Table * m_table;
-    Ball * m_cueball;
     std::vector<Ball*> m_balls;
+    Ball * m_cueball;
 };
 
 #endif // POOLGAME_H

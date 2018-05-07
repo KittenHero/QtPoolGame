@@ -11,7 +11,6 @@ together {
         #event(QEvent) : bool
         --slots--
         +runSimulationStep() : void
-        
     }
     
     abstract PoolGame <<abstract>> {
@@ -21,6 +20,9 @@ together {
         +{abstract} simulateTimeStep(float) : void
         +{abstract} draw(QPainter) : void
         +{abstract} handleEvent(QEvent) : void
+        #collisionVector(Ball, Ball) : QVector2D
+        #collisionVector(Table, Ball) : QVector2D
+        #isContained(Ball, QVector2D pos, double radius) : boolean
     }
     
     abstract class Ball <<abstract>> {
@@ -49,8 +51,8 @@ together {
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
         +size() : QSize
-        -collision(Ball, Ball) : void
-        -collision(Table, Ball) : void
+        -resolveBallCollision(Ball, Ball, collisionVector) : void
+        -resolveTableCollision(Ball, collisionVector) : void
     }
     
     class StageOneBall {

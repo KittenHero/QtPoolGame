@@ -18,7 +18,7 @@
 
 ## Todo
 
-+ Move PoolGame into BaseGame
++ ~Move PoolGame into BaseGame~
 + Implement GameFeature
 + Implement CueControl
 + Implement new ball and table

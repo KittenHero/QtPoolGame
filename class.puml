@@ -22,7 +22,6 @@ together {
         +{abstract} handleEvent(QEvent) : void
         #collisionVector(Ball, Ball) : QVector2D
         #collisionVector(Table, Ball) : QVector2D
-        #isContained(Ball, QVector2D pos, double radius) : boolean
     }
     
     abstract class Ball <<abstract>> {

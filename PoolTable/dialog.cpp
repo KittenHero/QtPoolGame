@@ -28,6 +28,10 @@ void Dialog::paintEvent(QPaintEvent *)
     m_game->draw(p);
 }
 
+bool Dialog::event(QEvent* event) {
+    m_game->handleEvent(event);
+    return true;
+}
 
 Dialog::~Dialog()
 {

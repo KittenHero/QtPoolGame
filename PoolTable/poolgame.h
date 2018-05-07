@@ -23,6 +23,13 @@ public:
     PoolGame(Table * m_table,std::vector<Ball*> balls, Ball* cueball)
         :m_table(m_table),m_balls(balls),m_cueball(cueball)
     {}
+    
+    virtual ~PoolGame() {
+        delete m_table;
+        delete m_cueball;
+        for (Ball* b : m_balls)
+            delete b;
+    }
 
     /**
      * @brief simulate one timestep of the game

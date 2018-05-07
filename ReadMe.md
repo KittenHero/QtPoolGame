@@ -19,7 +19,7 @@
 ## Todo
 
 + ~Move PoolGame into BaseGame~
-+ Implement GameFeature
++ ~Implement GameFeature~
 + Implement CueControl
 + Implement new ball and table
 + Implement new factory

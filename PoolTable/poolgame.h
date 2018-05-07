@@ -56,7 +56,14 @@ private:
      * @param b
      * @return the vector from ball a to b if they overlap or the zero vector otherwise
      */
-    QVector2D collisionVector(Ball &b1, Ball &b2) const;
+    QVector2D collisionVector(Ball &a, Ball &b) const {
+        
+        QVector2D col = b.position() - a.position();
+        if (col.length() <= a.radius() + b.radius())
+            return col;
+        else
+            return QVector2D()
+    }
 
     /**
      * @brief check if the ball is within the bounds of the table
@@ -64,8 +71,14 @@ private:
      * @param b
      * @return the basis vector in the direction that should be reflected or zero if ball is in table 
      */
-    QVector2D collisionVector(Table &t, Ball &b) const;
-
+    QVector2D collisionVector(Table &t, Ball &b) const {
+        double x = b.position().x(), y = b.position().y(), r = b.radius();
+        if (x - r < 0)              return QVector2D(-1, 0);
+        if (x + r > table->width()) return QVector2D(1,  0);
+        if (y - r < 0)              return QVector2D(0, -1);
+        if (y + r > table->height())return QVector2D(0,  1);
+    }
+    
     Table * m_table;
     Ball * m_cueball;
     std::vector<Ball*> m_balls;

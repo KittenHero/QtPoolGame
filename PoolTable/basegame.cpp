@@ -81,6 +81,9 @@ void BaseGame::resolveBallcollision(Ball &a, Ball &b, QVector2D collisionVector)
 
 void PoolGame::resolveTableCollision(Ball &b, QVector2D collisionVector)
 {
+    // ball is already reflected
+    if (QVector2D::dotProduct(collisionVector, b.velocity()) < 0)
+        return;
     // reflect on the same axis as the collision vector
     if(collisionVector.x() != 0)
         b.changeVelocity(QVector2D(-2 * b.velocity().x(), 0));

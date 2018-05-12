@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <QPainter>
 #include <QSize>
 #include <QMouseEvent>
@@ -24,9 +25,13 @@ public:
      */
 	PoolGame(
 		std::shared_ptr<Table> m_table,
-		std::shared_ptr<std::vector<std::shared_ptr<Ball>>> balls,
-		std::shared_ptr<Ball> cueball
-	) : m_table(m_table), m_balls(balls), m_cueball(cueball) {}
+		std::shared_ptr<std::vector<std::shared_ptr<Ball>>> balls
+	) : m_table(m_table), m_balls(balls) {
+		// find the first white ball in the array
+		auto it = std::find_if(m_balls->begin(), m_balls->end(), [](auto ball){ return ball->colour() == Qt::white; });
+		m_cueball = it != m_balls->end() ? *it : nullptr;
+
+	}
     
     virtual ~PoolGame() {}
 

@@ -4,9 +4,8 @@ class BaseGame : public PoolGame {
 public:
   BaseGame(
 	std::shared_ptr<Table> table,
-	std::shared_ptr<std::vector<std::shared_ptr<Ball>>> balls,
-	std::shared_ptr<Ball> cueball = nullptr
-  ) : PoolGame(table, balls, cueball) {}
+	std::shared_ptr<std::vector<std::shared_ptr<Ball>>> balls
+  ) : PoolGame(table, balls) {}
   ~BaseGame() {}
 
   void draw(QPainter &) const override;

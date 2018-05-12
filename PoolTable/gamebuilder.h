@@ -42,7 +42,6 @@ public:
 
 private:
 	std::shared_ptr<std::vector<std::shared_ptr<Ball>>> m_balls;
-	std::shared_ptr<Ball> m_cueball;
 	std::shared_ptr<Table> m_table;
 	std::shared_ptr<AbstractFactory> m_factory;
 };

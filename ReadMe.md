@@ -20,7 +20,7 @@
 
 + ~Move PoolGame into BaseGame~
 + ~Implement GameFeature~
-+ Implement CueControl
++ ~Implement CueControl~
 + Implement new ball and table
 + Implement new factory
 + Edit builder and director

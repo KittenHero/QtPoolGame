@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QPaintEvent>
 #include <QTimer>
+#include <memory>
 
 #include "poolgame.h"
 
@@ -21,8 +22,8 @@ public:
      * @param game is a pointer to a PoolGame, this takes ownership of that pointer
      * @param parent is the parent widget
      */
-    explicit Dialog(PoolGame * game, QWidget *parent = 0);
-    ~Dialog();
+	explicit Dialog(std::unique_ptr<PoolGame> game, QWidget *parent = 0);
+	~Dialog() {}
     /**
      * @brief starts the simulation
      */
@@ -33,16 +34,23 @@ protected:
      */
     void paintEvent(QPaintEvent *);
     /**
-     * @brief process user input
-     * @return wheter the event was recognised
+	 * @brief mouse movements
      */
-    bool event(QEvent *);
+	void mouseMoveEvent(QMouseEvent *);
+	/**
+	 * @brief mouse presses
+	 */
+	void mousePressEvent(QMouseEvent *);
+	/**
+	 * @brief mouse release
+	 */
+	void mouseReleaseEvent(QMouseEvent *);
 public slots:
-    void runSimulationStep();
+	void updateGame();
 private:
-    PoolGame * m_game;
-    QTimer * m_framerateTimer;
-    QTimer * m_timestepTimer;
+	std::unique_ptr<PoolGame> m_game;
+	QTimer m_framerateTimer;
+	QTimer m_timestepTimer;
 };
 
 #endif // DIALOG_H

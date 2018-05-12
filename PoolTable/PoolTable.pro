@@ -12,24 +12,29 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = PoolTable
 TEMPLATE = app
 
+DISTFILES += \
+    config.json
 
-SOURCES += main.cpp \
-    dialog.cpp \
-    poolgame.cpp \
-    stageonetable.cpp \
-    stageoneball.cpp \
-    stageonefactory.cpp \
-    gamebuilder.cpp \
-    initializer.cpp
-
-HEADERS  += dialog.h \
-    poolgame.h \
-    table.h \
-    ball.h \
-    stageonetable.h \
-    stageoneball.h \
+HEADERS += \
     abstractfactory.h \
-    stageonefactory.h \
+    ball.h \
+    basegame.h \
+    cueballcontrolfeature.h \
+    dialog.h \
     gamebuilder.h \
-    initializer.h
+    gamefeature.h \
+    initializer.h \
+    poolgame.h \
+    stageoneball.h \
+    stageonefactory.h \
+    stageonetable.h \
+    table.h
 
+SOURCES += \
+    basegame.cpp \
+    dialog.cpp \
+    gamebuilder.cpp \
+    initializer.cpp \
+    main.cpp \
+    stageonefactory.cpp \
+    cueballcontrolfeature.cpp

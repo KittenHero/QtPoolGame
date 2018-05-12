@@ -1,31 +1,31 @@
 #include "basegame.h"
+#include <math.h>
 
-
-void BaseGame::simulateTimeStep(float dtime)
+void BaseGame::update(float dtime)
 {
     //collisions of balls with the edge of the table
-    for(Ball * b: m_balls)
+	for(auto b: *m_balls)
     {
-        this->resolveTableCollision(*b, this->collisionVector(*table, *ball));
+		this->resolveTableCollision(*b, this->collisionVector(*b));
     }
 
     //a collision between each possible pair of balls
-    for(int i = 0; i < m_balls.size();++i)
+	for(auto i = m_balls->begin(); i != m_balls->end();++i)
     {
-        Ball &a = *m_balls[i];
-        for(int j = i+1;j < m_balls.size();++j)
+		Ball &a = **i;
+		for(auto j = i+1; j != m_balls->end(); ++j)
         {
-            Ball &b = *m_balls[j];
+			Ball &b = **j;
             this->resolveBallCollision(
                 a, b, this->collisionVector(a, b)
             );
         }
     }
 
-    float scaleFactor = - dtime*m_table->friction();
-    for(Ball * b: m_balls)
+	float scaleFactor = - dtime*m_table->friction()*10;
+	for(auto b: *m_balls)
     {
-        b->move(timeStep);
+		b->move(dtime);
         //apply friction
         b->changeVelocity(scaleFactor * b->velocity());
 
@@ -35,16 +35,16 @@ void BaseGame::simulateTimeStep(float dtime)
     }
 }
 
-void BaseGame::draw(QPainter &p)
+void BaseGame::draw(QPainter &p) const
 {
     m_table->draw(p);
-    for(Ball * b: m_balls)
+	for(auto b: *m_balls)
     {
         b->draw(p);
     }
 }
 
-void BaseGame::resolveBallcollision(Ball &a, Ball &b, QVector2D collisionVector)
+void BaseGame::resolveBallCollision(Ball &b1, Ball &b2, QVector2D collisionVector)
 {
     collisionVector.normalize();
     float mR = b2.mass() / b1.mass();
@@ -79,15 +79,15 @@ void BaseGame::resolveBallcollision(Ball &a, Ball &b, QVector2D collisionVector)
      b2.changeVelocity((root - vB) * collisionVector);
 }
 
-void PoolGame::resolveTableCollision(Ball &b, QVector2D collisionVector)
+void BaseGame::resolveTableCollision(Ball &b, QVector2D collisionVector)
 {
     // ball is already reflected
     if (QVector2D::dotProduct(collisionVector, b.velocity()) < 0)
         return;
     // reflect on the same axis as the collision vector
     if(collisionVector.x() != 0)
-        b.changeVelocity(QVector2D(-2 * b.velocity().x(), 0));
+		b.setVelocity({- b.velocity().x(), b.velocity().y()});
 
     if(collisionVector.y() != 0)
-        b.changeVelocity(QVector2D(0, -2 * b.velocity().y()));
+		b.setVelocity({b.velocity().x(), - b.velocity().y()});
 }

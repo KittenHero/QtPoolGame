@@ -16,7 +16,7 @@ together {
     abstract PoolGame <<abstract>> {
         #m_table : Table
         #m_ball : vector<Ball>
-        #m_cueball : Ball *alias
+        #m_cueball : Ball
         +{abstract} simulateTimeStep(float) : void
         +{abstract} draw(QPainter) : void
         +{abstract} handleEvent(QEvent) : void
@@ -29,6 +29,7 @@ together {
         #m_velocity : QVector2D 
         #m_radius : float
         #m_mass : float
+        #m_colour : QColor
         
         +{abstract} changePosition(QVector2D deltaP) : void
         +{abstract} changeVelocity(QVector2D deltaX) : void
@@ -54,11 +55,7 @@ together {
         -resolveTableCollision(Ball, collisionVector) : void
     }
     
-    class StageOneBall {
-        -m_colour : QColor
-        +setColor(QColor) : void
-        +colour() : const QColor&
-    }
+    class StageOneBall
     
     class StageOneTable {
         -m_colour : QColor
@@ -89,8 +86,6 @@ together {
         +makeBall(QJsonObject spec) : Ball
         +makeTable(QJsonObject spec) : Table
     }
-    
-    
 }
     
 together {
@@ -103,7 +98,8 @@ together {
     }
     
     class CueBallControlFeature {
-        -m_clickCoord : Pair<QVector2D, QVector2D> 
+		-m_click : bool
+		-m_force : QVector2D
         +handleEvent(QEvent) : void
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
@@ -122,7 +118,6 @@ together {
     }
     
     class MatryoshkaBall {
-        -m_colour : QColor
         -m_strength : double
         -m_nested : vector<Ball>
         -{static} m_showNested : boolean

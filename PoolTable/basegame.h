@@ -2,13 +2,18 @@
 
 class BaseGame : public PoolGame {
 public:
-  BaseGame(Table* table, std::vector<Ball*> balls, Ball* cueball) :
-  PoolGame(table, balls, cueball) {} 
+  BaseGame(
+	std::shared_ptr<Table> table,
+	std::shared_ptr<std::vector<std::shared_ptr<Ball>>> balls,
+	std::shared_ptr<Ball> cueball = nullptr
+  ) : PoolGame(table, balls, cueball) {}
   ~BaseGame() {}
+
   void draw(QPainter &) const override;
-  void simulatedTimeStep(float) override;
+  void update(float) override;
+  void handleEvent(QMouseEvent *) override {}
 
 private:
-  void resolveBallCollision(Ball &, Ball &, QVector2D)
-  void resolveTableCollision(Ball &, QVector2D)
+  void resolveBallCollision(Ball &, Ball &, QVector2D);
+  void resolveTableCollision(Ball &, QVector2D);
 };

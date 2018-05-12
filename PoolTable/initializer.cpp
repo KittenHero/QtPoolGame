@@ -33,7 +33,7 @@ QJsonObject jsonFromFile(const std::string &configFilePath)
     return jsonDocConfig.object();
 }
 
-PoolGame *Initializer::createPoolgame(const std::string &configFilePath)
+std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configFilePath)
 {
 
     QJsonObject config = jsonFromFile(configFilePath);
@@ -44,7 +44,7 @@ PoolGame *Initializer::createPoolgame(const std::string &configFilePath)
     //there aren't explicit subclasses of builder, rather a state variable (the factory) is used
     //to provide different behavior for different stages, additional design patterns amirite?
     //don't need any logic yet to decide which factory to use
-    AbstractFactory *factory = new StageOneFactory();
+	std::shared_ptr<AbstractFactory> factory = std::make_shared<StageOneFactory>();
 
     GameBuilder builder(factory);
 

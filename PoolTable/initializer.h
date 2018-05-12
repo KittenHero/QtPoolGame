@@ -2,6 +2,7 @@
 #define INITIALIZER_H
 
 #include <string>
+#include <memory>
 
 #include "poolgame.h"
 
@@ -19,7 +20,7 @@ public:
      * @param configFilePath the path to the config file encoded in JSon
      * @return returns a pointer to a created PoolGame, if the PoolGame failed to be created for any reason nullptr is returned instead
      */
-    PoolGame *createPoolgame(const std::string &configFilePath);
+	std::unique_ptr<PoolGame> createPoolgame(const std::string &configFilePath);
 
 };
 

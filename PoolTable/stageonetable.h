@@ -23,7 +23,11 @@ public:
      * with the colour set in the constructor
      * @param p the painter used to draw the table
      */
-    void draw(QPainter &p);
+	void draw(QPainter &p) const override {
+		p.setPen(Qt::black);
+		p.setBrush(QBrush(m_colour));
+		p.drawRect(0,0,m_width,m_height);
+	}
 
 private:
     QColor m_colour;

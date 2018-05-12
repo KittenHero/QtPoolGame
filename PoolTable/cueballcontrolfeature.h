@@ -1,13 +1,17 @@
+#pragma once
 #include "gamefeature.h"
+#include <utility>
 
 class CueBallControlFeature : public GameFeature {
 public:
-    CueBallControlFeature(PoolGame *game) : GameFeature(game) {}
+	CueBallControlFeature(std::unique_ptr<PoolGame> game) : GameFeature(std::move(game)) {}
     ~CueBallControlFeature() {}
     
-    void handleEvent(QEvent*) override;
+	void handleEvent(QMouseEvent*) override;
     void draw(QPainter &) const override;
+	void update(float) override;
 
 private:
-    std::Pair<QVector2D, QVector2D> m_clickCoord;
+	QVector2D m_force;
+	bool m_click;
 };

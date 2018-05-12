@@ -1,14 +1,15 @@
+#pragma once
 #include "poolgame.h"
 
 class GameFeature : public PoolGame {
 public:
-  GameFeature(PoolGame *game) : m_game(game) {}
-  virtual ~GameFeature() { delete m_game; }
+  GameFeature(std::unique_ptr<PoolGame> game) : PoolGame(*game), m_game(std::move(game)) {}
+  virtual ~GameFeature() {}
   
-  virtual void draw(QPainter& p) { m_game->draw(p); }
-  virtual void simultateTimeStep(float dtime) { m_game->simulateTimeStep(dtime); }
-  virtual void handleEvent(QEvent* e) { m_game->handleEvent(e); }
+  void draw(QPainter& p) const override { m_game->draw(p); }
+  void update(float dtime) override { m_game->update(dtime); }
+  void handleEvent(QMouseEvent* e) override { m_game->handleEvent(e); }
   
 private:
-  PoolGame *m_game;
-}
+  std::unique_ptr<PoolGame> m_game;
+};

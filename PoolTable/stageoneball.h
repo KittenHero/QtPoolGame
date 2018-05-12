@@ -12,22 +12,18 @@
 class StageOneBall : public Ball
 {
 public:
-    StageOneBall();
+	StageOneBall() {}
 
-    const QColor & colour(){return m_colour;}
-
-    void setColour(const QColor &newColour){m_colour = newColour;}
-
-    // Ball interface
 public:
     /**
      * @brief draw the ball
      * @param painter to use to draw the ball
      */
-    void draw(QPainter &p);
-
-private:
-    QColor m_colour;
+	void draw(QPainter &p) const override {
+		p.setPen(Qt::black);
+		p.setBrush(QBrush(colour()));
+		p.drawEllipse(m_position.toPointF(),m_radius,m_radius);
+	}
 };
 
 #endif // STAGEONEBALL_H

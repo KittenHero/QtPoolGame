@@ -29,7 +29,7 @@ public:
      * @brief draws a table
      * @param painter used to draw the table
      */
-    virtual void draw(QPainter & p) = 0;
+	virtual void draw(QPainter & p) const = 0;
 
 protected:
     float m_width;

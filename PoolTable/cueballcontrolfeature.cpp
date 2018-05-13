@@ -27,9 +27,9 @@ void CueBallControlFeature::draw(QPainter& painter) const {
 	GameFeature::draw(painter);
 	if (m_click) {
 		// draw line to indicate direction of shot
-		painter.setPen(QColor("#ffff00"));
+		painter.setPen(Qt::yellow);
 		painter.drawLine(
-			(m_cueball->position() + m_force.normalized()*m_cueball->radius()).toPointF(),
+			(m_cueball->position() /* + m_force.normalized()*m_cueball->radius() */).toPointF(),
 			(m_cueball->position() + m_force).toPointF()
 		);
 	}

@@ -24,6 +24,6 @@
 + ~Implement new ball and table~
 + ~Implement new factory~
 + ~Edit builder and director~
-+ Implement PocketInteraction
++ ~Implement PocketInteraction~
 + ~Implement ExplodingBall~
 + Doxygen

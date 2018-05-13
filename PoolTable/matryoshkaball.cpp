@@ -1,6 +1,6 @@
 #include "matryoshkaball.h"
 
-bool MatryoshkaBall::s_showNested = true;
+bool MatryoshkaBall::s_showNested = false;
 
 float MatryoshkaBall::mass() const {
 	auto effectiveMass = m_mass;

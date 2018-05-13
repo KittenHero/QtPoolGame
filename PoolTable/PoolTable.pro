@@ -39,7 +39,8 @@ HEADERS += \
     pocketedtable.h \
     stagetwofactory.h \
     matryoshkaball.h \
-    explodingballfeature.h
+    explodingballfeature.h \
+    pocketinteractionfeature.h
 
 SOURCES += \
     basegame.cpp \
@@ -53,4 +54,5 @@ SOURCES += \
     pocketedtable.cpp \
     stagetwofactory.cpp \
     matryoshkaball.cpp \
-    explodingballfeature.cpp
+    explodingballfeature.cpp \
+    pocketinteractionfeature.cpp

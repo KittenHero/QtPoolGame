@@ -12,6 +12,7 @@
 #include "stagetwofactory.h"
 #include "gamebuilder.h"
 #include "explodingballfeature.h"
+#include "pocketinteractionfeature.h"
 
 QJsonObject jsonFromFile(const std::string &configFilePath)
 {
@@ -74,7 +75,7 @@ std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configF
 	auto game = builder.getGame();
 
 	if (stage2)
-		game = std::make_unique<ExplodingBallFeature>(std::move(game));
+		game = std::make_unique<PocketInteractionFeature>(std::make_unique<ExplodingBallFeature>(std::move(game)));
 
 	return game;
 }

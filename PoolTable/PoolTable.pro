@@ -15,6 +15,13 @@ TEMPLATE = app
 DISTFILES += \
     config.json
 
+equals(QMAKE_CXX, "clang++") {
+	QMAKE_CXXFLAGS_WARN_ON += -Wno-logical-op-parentheses
+}
+equals(QMAKE_CXX, "g++") {
+	QMAKE_CXXFLAGS_WARN_ON += -Wno-parentheses
+}
+
 HEADERS += \
     abstractfactory.h \
     ball.h \

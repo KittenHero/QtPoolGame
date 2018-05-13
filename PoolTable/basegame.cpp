@@ -22,7 +22,7 @@ void BaseGame::update(float dtime)
         }
     }
 
-	float scaleFactor = - dtime*m_table->friction()*10;
+	float scaleFactor = - dtime * 50 * m_table->friction();
 	for(auto b: *m_balls)
     {
 		b->move(dtime);

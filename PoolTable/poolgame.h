@@ -30,7 +30,6 @@ public:
 		// find the first white ball in the array
 		auto it = std::find_if(m_balls->begin(), m_balls->end(), [](auto ball){ return ball->colour() == Qt::white; });
 		m_cueball = it != m_balls->end() ? *it : nullptr;
-
 	}
     
     virtual ~PoolGame() {}
@@ -78,7 +77,6 @@ protected:
 
     /**
      * @brief check if the ball is within the bounds of the table
-     * @param t
      * @param b
      * @return the basis vector in the direction that should be reflected or zero if ball is in table 
      */

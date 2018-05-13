@@ -11,7 +11,7 @@ void CueBallControlFeature::handleEvent(QMouseEvent* mouse) {
 	// when mouse is released, shoot the cueball and clear all data
 	if (m_click && mouse->type() == QEvent::MouseButtonRelease && mouse->button() == Qt::LeftButton) {
 		m_click = false;
-		m_cueball->setVelocity(m_force);
+		m_cueball->setVelocity(m_force * 5);
 		m_force = QVector2D();
 	// when left clicked on cueball, grab the mouse
 	} else if (mouse->button() == Qt::LeftButton && (m_cueball->position() - coord).length() < m_cueball->radius() || m_click && mouse->button() == Qt::NoButton) {

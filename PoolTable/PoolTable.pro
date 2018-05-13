@@ -35,7 +35,11 @@ HEADERS += \
     stageoneball.h \
     stageonefactory.h \
     stageonetable.h \
-    table.h
+    table.h \
+    pocketedtable.h \
+    stagetwofactory.h \
+    matryoshkaball.h \
+    explodingballfeature.h
 
 SOURCES += \
     basegame.cpp \
@@ -44,4 +48,9 @@ SOURCES += \
     initializer.cpp \
     main.cpp \
     stageonefactory.cpp \
-    cueballcontrolfeature.cpp
+    cueballcontrolfeature.cpp \
+    poolgame.cpp \
+    pocketedtable.cpp \
+    stagetwofactory.cpp \
+    matryoshkaball.cpp \
+    explodingballfeature.cpp

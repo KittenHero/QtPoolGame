@@ -38,9 +38,9 @@ std::shared_ptr<Ball> StageOneFactory::makeBall(const QJsonObject &config) const
 std::shared_ptr<Table> StageOneFactory::makeTable(const QJsonObject &config) const
 {
     //not really worth doing the builder style with only 3 variables
-    QVector2D dimensions = QJsonValueToVector2D(config["size"],300,600);
-    float friction = config["friction"].toDouble();
-    QColor colour = QColor(config["colour"].toString());
+	QVector2D dimensions = QJsonValueToVector2D(config["size"],600,300);
+	float friction = config["friction"].toDouble(0.01);
+	QColor colour(config["colour"].toString("green"));
 
-	return std::make_shared<StageOneTable>(dimensions.x(),dimensions.y(),friction,colour);
+	return std::make_shared<StageOneTable>(dimensions.x(), dimensions.y(), friction,colour);
 }

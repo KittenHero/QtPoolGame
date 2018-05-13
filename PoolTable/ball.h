@@ -14,23 +14,17 @@ public:
     Ball(){}
     virtual ~Ball(){}
 
-    const QVector2D &position()const{return m_position;}
-    const QVector2D &velocity()const{return m_velocity;}
-    float radius()const{return m_radius;}
-    float mass()const{return m_mass;}
-	const QColor &colour() const {return m_colour;}
+	virtual const QVector2D &position()const{return m_position;}
+	virtual const QVector2D &velocity()const{return m_velocity;}
+	virtual float radius()const{return m_radius;}
+	virtual float mass()const{return m_mass;}
+	virtual const QColor &colour() const {return m_colour;}
 
-    void setPosition(const QVector2D &newPosition){m_position = newPosition;}
-    /**
-     * @brief setVelocity sets the velocity manually to a value.
-     * This should only be used to initialize the balls starting velocity
-     * and set it to zero if it is small enough, otherwise use changeVelocity
-     * @param newVelocity
-     */
-    void setVelocity(const QVector2D &newVelocity){m_velocity = newVelocity;}
-    void setRadius(float newRadius){m_radius = newRadius;}
-    void setMass(float newMass){m_mass = newMass;}
-	void setColour(const QColor &newColour){m_colour = newColour;}
+	virtual void setPosition(const QVector2D &newPosition){m_position = newPosition;}
+	virtual void setVelocity(const QVector2D &newVelocity){m_velocity = newVelocity;}
+	virtual void setRadius(float newRadius){m_radius = newRadius;}
+	virtual void setMass(float newMass){m_mass = newMass;}
+	virtual void setColour(const QColor &newColour){m_colour = newColour;}
 
     virtual void changePosition(const QVector2D &deltaX){m_position += deltaX;}
     virtual void changeVelocity(const QVector2D &deltaV){m_velocity += deltaV;}

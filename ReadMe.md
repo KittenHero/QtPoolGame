@@ -21,9 +21,9 @@
 + ~Move PoolGame into BaseGame~
 + ~Implement GameFeature~
 + ~Implement CueControl~
-+ Implement new ball and table
-+ Implement new factory
-+ Edit builder and director
++ ~Implement new ball and table~
++ ~Implement new factory~
++ ~Edit builder and director~
 + Implement PocketInteraction
-+ Implement ExplodingBall
++ ~Implement ExplodingBall~
 + Doxygen

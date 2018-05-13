@@ -9,7 +9,9 @@
 #include <QJsonArray>
 
 #include "stageonefactory.h"
+#include "stagetwofactory.h"
 #include "gamebuilder.h"
+#include "explodingballfeature.h"
 
 QJsonObject jsonFromFile(const std::string &configFilePath)
 {
@@ -37,39 +39,42 @@ std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configF
 {
 
     QJsonObject config = jsonFromFile(configFilePath);
-    if(config.isEmpty())
-        return nullptr;
 
     //here the correct factory for the builder to use is selected
     //there aren't explicit subclasses of builder, rather a state variable (the factory) is used
     //to provide different behavior for different stages, additional design patterns amirite?
-    //don't need any logic yet to decide which factory to use
-	std::shared_ptr<AbstractFactory> factory = std::make_shared<StageOneFactory>();
+
+	// No UNORITE
+	bool stage2 = config["stage2"].toBool(false);
+	std::shared_ptr<AbstractFactory> factory;
+	if (stage2)
+		factory = std::make_shared<StageTwoFactory>();
+	else
+		factory = std::make_shared<StageOneFactory>();
 
     GameBuilder builder(factory);
 
-    if(config.contains("table"))
-    {
-        builder.buildTable(config["table"].toObject());
-    }
-    else
-    {
-        std::cout << "no \"table\" key found" <<std::endl;
-        return nullptr;
-    }
+	auto table = config["table"].toObject();
+	builder.buildTable(table);
 
-    if(config.contains("balls"))
-    {
-        QJsonArray balls = config["balls"].toArray();
-        for(int i = 0; i < balls.size();++i)
-        {
-            builder.addBall(balls[i].toObject());
-        }
+	if(config.contains("balls") && config["balls"].toArray().size()) {
+		for (auto ball : config["balls"].toArray())
+			builder.addBall(ball.toObject());
+	} else {
+		auto tabledim = table["size"].toObject();
+		builder.addBall(QJsonObject {
+			{
+				"position", QJsonObject {
+					{"x", tabledim["x"].toDouble(600)/2},
+					{"y", tabledim["y"].toDouble(300)/2}
+				}
+			}
+		});
     }
-    else
-    {
-        std::cout << "no \"ball\" key found" <<std::endl;
-        return nullptr;
-    }
-    return builder.getGame();
+	auto game = builder.getGame();
+
+	if (stage2)
+		game = std::make_unique<ExplodingBallFeature>(std::move(game));
+
+	return game;
 }

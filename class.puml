@@ -55,7 +55,9 @@ together {
         -resolveTableCollision(Ball, collisionVector) : void
     }
     
-    class StageOneBall
+	class StageOneBall {
+		+draw(QPainter) : void
+	}
     
     class StageOneTable {
         -m_colour : QColor
@@ -112,6 +114,7 @@ together {
     }
     
     class PocketInteractionFeature {
+		-m_cuesunk : bool
         +handleEvent(QEvent) : void
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
@@ -120,7 +123,7 @@ together {
     class MatryoshkaBall {
         -m_strength : double
         -m_nested : vector<Ball>
-        -{static} m_showNested : boolean
+        -{static} m_showNested : bool
         
         +draw(QPainter) : void
         +setColor(QColor) : void

@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-CONFIG += console
+CONFIG += c++14 console
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

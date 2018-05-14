@@ -62,6 +62,7 @@ std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configF
 		for (auto ball : config["balls"].toArray())
 			builder.addBall(ball.toObject());
 	} else {
+		// if no balls then default to white ball in the centre
 		auto tabledim = table["size"].toObject();
 		builder.addBall(QJsonObject {
 			{

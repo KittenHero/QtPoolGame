@@ -7,9 +7,16 @@ public:
 	CueBallControlFeature(std::unique_ptr<PoolGame> game) : GameFeature(std::move(game)) {}
     ~CueBallControlFeature() {}
     
+	/**
+	 * @brief handles input for shooting cueball
+	 * @param mouse
+	 */
 	void handleEvent(QMouseEvent*) override;
+	/**
+	 * @brief draws visual cue when shooting
+	 * @param painter
+	 */
     void draw(QPainter &) const override;
-	void update(float) override;
 
 private:
 	QVector2D m_force;

@@ -13,10 +13,14 @@ public:
 		: Table(width, height, friction), m_colour(colour), m_pockets() {}
 	virtual ~PocketedTable() {}
 
+	/**
+	 * @brief draw the table and pockets
+	 * @param painter
+	 */
 	void draw(QPainter& painter) const override;
 
 	/**
-	 * @brief addPockets
+	 * @brief add pockets if they're not outside the table
 	 * @param centre
 	 * @param radius
 	 */

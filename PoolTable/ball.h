@@ -26,7 +26,15 @@ public:
 	virtual void setMass(float newMass){m_mass = newMass;}
 	virtual void setColour(const QColor &newColour){m_colour = newColour;}
 
+	/**
+	 * @breif changes the position of the ball
+	 * @param deltaP the change in position
+	 */
     virtual void changePosition(const QVector2D &deltaX){m_position += deltaX;}
+	/**
+	 * @breif changes the velocity of the ball
+	 * @param deltaV the change in velocity
+	 */
     virtual void changeVelocity(const QVector2D &deltaV){m_velocity += deltaV;}
 
     /**

@@ -12,12 +12,8 @@ void PocketedTable::draw(QPainter& painter) const {
 		);
 }
 
-/**
- * @brief addPockets
- * @param centre
- * @param radius
- */
 void PocketedTable::addPocket(QVector2D centre, double radius) {
+	// if the pocket is outside the table, do not add it
 	if (
 		centre.x() + radius <= 0 || centre.y() + radius <= 0
 		|| centre.x() - radius >= m_width

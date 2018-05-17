@@ -3,7 +3,7 @@
 #include <utility>
 
 /**
- * @breif Adds the ability to shoot cueball with mouse
+ * @brief Adds the ability to shoot cueball with mouse
  */
 class CueBallControlFeature : public GameFeature {
 public:

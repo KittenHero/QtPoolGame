@@ -23,7 +23,7 @@ public:
    * @brief calls event handler on component
    * @param mouseEvent
    */
-  void handleEvent(QMouseEvent& e) override { m_game->handleEvent(e); }
+  void handleEvent(const QMouseEvent& e) override { m_game->handleEvent(e); }
   
 private:
   std::unique_ptr<PoolGame> m_game;

@@ -24,7 +24,7 @@ public:
 	 * @brief places the ball when sunk
 	 * @param mouseEvent
 	 */
-	void handleEvent(QMouseEvent &) override;
+	void handleEvent(const QMouseEvent &) override;
 	/**
 	 * @brief model interactions betweeb ball and pockets
 	 * @param timestep

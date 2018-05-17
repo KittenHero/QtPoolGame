@@ -4,7 +4,7 @@ inline double min(double a, double b) {
 	return a < b ? a : b;
 }
 
-void CueBallControlFeature::handleEvent(QMouseEvent& mouse) {
+void CueBallControlFeature::handleEvent(const QMouseEvent& mouse) {
 
 	QVector2D coord = QVector2D(mouse.localPos());
 

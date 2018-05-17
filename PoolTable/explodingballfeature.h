@@ -21,7 +21,7 @@ public:
 	 * @brief toggles inner ball visibility
 	 * @param mouseEvent
 	 */
-	void handleEvent(QMouseEvent &) override;
+	void handleEvent(const QMouseEvent &) override;
 };
 
 #endif // EXPLODINGBALLFEATURE_H

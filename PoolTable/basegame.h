@@ -25,7 +25,7 @@ public:
    * @brief does nothing
    * @param mouseEvent
    */
-  void handleEvent(QMouseEvent &) override {}
+  void handleEvent(const QMouseEvent &) override {}
 
 private:
   /**

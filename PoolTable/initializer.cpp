@@ -45,10 +45,9 @@ std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configF
     //there aren't explicit subclasses of builder, rather a state variable (the factory) is used
     //to provide different behavior for different stages, additional design patterns amirite?
 
-	// No UNORITE
-	bool stage2 = config["stage2"].toBool(false);
+	// No UNORITE this isn't a state pattern
 	std::shared_ptr<AbstractFactory> factory;
-	if (stage2)
+	if (config["stage2"].toBool(false))
 		factory = std::make_shared<StageTwoFactory>();
 	else
 		factory = std::make_shared<StageOneFactory>();

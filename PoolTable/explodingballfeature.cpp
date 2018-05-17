@@ -12,16 +12,15 @@ void ExplodingBallFeature::handleEvent(QMouseEvent* mouse) {
 }
 
 void ExplodingBallFeature::update(float dtime) {
-	std::vector<QVector2D> preVelocity(m_balls->size());
+	std::vector<QVector2D> preVelocity;
 
 	for (auto ball : *m_balls) {
 		preVelocity.push_back(ball->velocity());
 	}
 
 	GameFeature::update(dtime);
-
 	for (size_t i = 0; i < preVelocity.size(); ++i) {
-		auto& ball = *static_cast<MatryoshkaBall *>(m_balls->at(i).get());
+		auto& ball = *static_cast<MatryoshkaBall*>(m_balls->at(i).get());
 		if (ball.strength() < 0) continue;
 
 		auto deltaV = ball.velocity() - preVelocity[i];
@@ -31,7 +30,6 @@ void ExplodingBallFeature::update(float dtime) {
 
 		// ball strength exceeded : gets destroyed
 		ball.setRadius(0);
-
 		auto& nested = ball.nested();
 		if (nested.empty())  continue;
 

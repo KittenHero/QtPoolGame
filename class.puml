@@ -114,7 +114,9 @@ together {
     }
     
     class PocketInteractionFeature {
+		-m_table : PocketedTable
 		-m_cuesunk : bool
+		-m_cue_radius : double
         +handleEvent(QEvent) : void
         +simulateTimeStep(float) : void
         +draw(QPainter) : void

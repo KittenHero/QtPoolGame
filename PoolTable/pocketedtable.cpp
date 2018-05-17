@@ -20,5 +20,5 @@ void PocketedTable::addPocket(QVector2D centre, double radius) {
 		|| centre.y() - radius >= m_height
 	) return;
 
-	m_pockets.push_back({centre, radius});
+	m_pockets.emplace_back(centre, radius);
 }

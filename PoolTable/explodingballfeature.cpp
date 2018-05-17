@@ -12,8 +12,7 @@ void ExplodingBallFeature::handleEvent(QMouseEvent* mouse) {
 }
 
 void ExplodingBallFeature::update(float dtime) {
-	static std::vector<QVector2D> preVelocity(m_balls->size());
-	preVelocity.clear();
+	std::vector<QVector2D> preVelocity(m_balls->size());
 
 	for (auto ball : *m_balls) {
 		preVelocity.push_back(ball->velocity());
@@ -22,7 +21,7 @@ void ExplodingBallFeature::update(float dtime) {
 	GameFeature::update(dtime);
 
 	for (size_t i = 0; i < preVelocity.size(); ++i) {
-		auto& ball = static_cast<MatryoshkaBall&>(*m_balls->at(i));
+		auto& ball = *static_cast<MatryoshkaBall *>(m_balls->at(i).get());
 		if (ball.strength() < 0) continue;
 
 		auto deltaV = ball.velocity() - preVelocity[i];

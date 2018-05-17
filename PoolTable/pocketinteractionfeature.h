@@ -2,12 +2,15 @@
 #define POCKETINTERACTIONFEATURE_H
 
 #include "gamefeature.h"
+#include "pocketedtable.h"
 
 class PocketInteractionFeature : public GameFeature
 {
 public:
 	PocketInteractionFeature(std::unique_ptr<PoolGame> game)
-		: GameFeature(std::move(game)), m_cuesunk(false) {}
+		: GameFeature(std::move(game)),
+		m_table(std::static_pointer_cast<PocketedTable>(GameFeature::m_table)),
+		m_cuesunk(false), m_cue_radius(m_cueball->radius()) {}
 
 	/**
 	 * @brief draws the cueball when sunk
@@ -25,7 +28,9 @@ public:
 	 */
 	void update(float t) override;
 private:
+	std::shared_ptr<PocketedTable> m_table;
 	bool m_cuesunk;
+	double m_cue_radius;
 };
 
 #endif // POCKETINTERACTIONFEATURE_H

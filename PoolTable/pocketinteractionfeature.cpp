@@ -35,12 +35,9 @@ void PocketInteractionFeature::handleEvent(QMouseEvent* mouse) {
 void PocketInteractionFeature::update(float dtime) {
 	GameFeature::update(dtime);
 
-	static auto& table = static_cast<PocketedTable&>(*m_table);
-	static auto cue_radius = m_cueball->radius();
-
 	for (auto ball : *m_balls) {
 
-		for (auto pocket : table.pockets()) {
+		for (auto pocket : m_table->pockets()) {
 			// if the bottom of the ball is in the pocket
 			// it will fall towards the hole
 			auto offset = pocket.first - ball->position();
@@ -60,5 +57,5 @@ void PocketInteractionFeature::update(float dtime) {
 	auto isInvalid = [](auto ball) { return ball->radius() <= 0; };
 	m_balls->erase(std::remove_if(m_balls->begin(), m_balls->end(), isInvalid), m_balls->end());
 	// restore the radius of the cueball
-	m_cueball->setRadius(cue_radius);
+	m_cueball->setRadius(m_cue_radius);
 }

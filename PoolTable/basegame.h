@@ -1,5 +1,8 @@
 #include "poolgame.h"
 
+/**
+ * @brief BaseGame contains basic physics and collision detection
+ */
 class BaseGame : public PoolGame {
 public:
   BaseGame(
@@ -25,6 +28,21 @@ public:
   void handleEvent(QMouseEvent *) override {}
 
 private:
+  /**
+   * @brief checks if two balls overlap
+   * @param a
+   * @param b
+   * @return the vector from ball a to b if they overlap or the zero vector otherwise
+   */
+  QVector2D collisionVector(Ball &a, Ball &b) const;
+  
+  /**
+   * @brief check if the ball is within the bounds of the table
+   * @param b
+   * @return the basis vector in the direction that should be reflected or zero if ball is in table 
+   */
+  QVector2D collisionVector(Ball &b) const;
+    
   /**
    * @brief resolve bal-ball collision
    * @param b1 ball

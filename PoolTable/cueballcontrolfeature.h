@@ -2,6 +2,9 @@
 #include "gamefeature.h"
 #include <utility>
 
+/**
+ * @breif Adds the ability to shoot cueball with mouse
+ */
 class CueBallControlFeature : public GameFeature {
 public:
 	CueBallControlFeature(std::unique_ptr<PoolGame> game) : GameFeature(std::move(game)) {}

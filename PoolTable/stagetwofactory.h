@@ -2,6 +2,9 @@
 #define STAGETWOFACTORY_H
 #include "abstractfactory.h"
 
+/**
+ * @brief this factory creates MatryoshkaBall and PocketedTables
+ */
 class StageTwoFactory : public AbstractFactory
 {
 public:

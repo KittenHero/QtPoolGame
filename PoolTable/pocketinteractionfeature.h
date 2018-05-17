@@ -4,6 +4,9 @@
 #include "gamefeature.h"
 #include "pocketedtable.h"
 
+/**
+ * @brief adds the ability to remove balls that goes in pockets
+ */
 class PocketInteractionFeature : public GameFeature
 {
 public:

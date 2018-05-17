@@ -44,6 +44,25 @@ void BaseGame::draw(QPainter &p) const
     }
 }
 
+
+QVector2D BaseGame::collisionVector(Ball &a, Ball &b) const {
+
+	QVector2D col = b.position() - a.position();
+	if (col.length() <= a.radius() + b.radius())
+		return col;
+	else
+		return QVector2D();
+}
+
+QVector2D BaseGame::collisionVector(Ball &b) const {
+
+	double x = b.position().x(), y = b.position().y(), r = b.radius();
+	if (x - r < 0)                 return QVector2D(-1, 0);
+	if (x + r > m_table->width())  return QVector2D(1,  0);
+	if (y - r < 0)                 return QVector2D(0, -1);
+	if (y + r > m_table->height()) return QVector2D(0,  1);
+	return QVector2D();
+}
 void BaseGame::resolveBallCollision(Ball &b1, Ball &b2, QVector2D collisionVector)
 {
     collisionVector.normalize();

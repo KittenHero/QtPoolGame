@@ -46,8 +46,9 @@ std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configF
     //to provide different behavior for different stages, additional design patterns amirite?
 
 	// No UNORITE this isn't a state pattern
+	bool stage2 = config["stage2"].toBool(false);
 	std::shared_ptr<AbstractFactory> factory;
-	if (config["stage2"].toBool(false))
+	if (stage2)
 		factory = std::make_shared<StageTwoFactory>();
 	else
 		factory = std::make_shared<StageOneFactory>();
@@ -75,7 +76,9 @@ std::unique_ptr<PoolGame> Initializer::createPoolgame(const std::string &configF
 	auto game = builder.getGame();
 
 	if (stage2)
-		game = std::make_unique<PocketInteractionFeature>(std::make_unique<ExplodingBallFeature>(std::move(game)));
+		game = std::make_unique<PocketInteractionFeature> (
+		   std::make_unique<ExplodingBallFeature> (std::move(game))
+		);
 
 	return game;
 }

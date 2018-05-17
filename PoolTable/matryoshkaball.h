@@ -4,6 +4,9 @@
 #include "ball.h"
 #include <memory>
 
+/**
+ * @brief this type of ball can contain other balls
+ */
 class MatryoshkaBall : public Ball
 {
 public:

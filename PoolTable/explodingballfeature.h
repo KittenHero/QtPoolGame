@@ -3,6 +3,9 @@
 
 #include "gamefeature.h"
 
+/**
+ * @brief adds the ability to break balls
+ */
 class ExplodingBallFeature : public GameFeature
 {
 public:

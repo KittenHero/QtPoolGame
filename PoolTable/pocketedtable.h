@@ -6,6 +6,9 @@
 #include <utility>
 #include "table.h"
 
+/**
+ * @brief this type of table has pockets
+ */
 class PocketedTable : public Table
 {
 public:

@@ -50,7 +50,6 @@ SOURCES += \
     main.cpp \
     stageonefactory.cpp \
     cueballcontrolfeature.cpp \
-    poolgame.cpp \
     pocketedtable.cpp \
     stagetwofactory.cpp \
     matryoshkaball.cpp \

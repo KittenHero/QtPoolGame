@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <math.h>
 
-void ExplodingBallFeature::handleEvent(QMouseEvent* mouse) {
-	if (mouse->button() == Qt::RightButton && mouse->type() == QEvent::MouseButtonRelease)
+void ExplodingBallFeature::handleEvent(QMouseEvent& mouse) {
+	if (mouse.button() == Qt::RightButton && mouse.type() == QEvent::MouseButtonRelease)
 		MatryoshkaBall::toggleInnerVisibility();
 
 	GameFeature::handleEvent(mouse);

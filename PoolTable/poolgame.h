@@ -52,7 +52,7 @@ public:
      * @brief handles user inputs
      * @param input events
      */
-	virtual void handleEvent(QMouseEvent *) = 0;
+	virtual void handleEvent(QMouseEvent &) = 0;
 
     /**
      * @brief size

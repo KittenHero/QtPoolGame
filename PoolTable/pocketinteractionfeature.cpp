@@ -16,12 +16,12 @@ void PocketInteractionFeature::draw(QPainter& painter) const {
 	}
 }
 
-void PocketInteractionFeature::handleEvent(QMouseEvent* mouse) {
+void PocketInteractionFeature::handleEvent(QMouseEvent& mouse) {
 
 	// if the ball is sunk, place the ball by clicking
 	if (m_cuesunk) {
-		m_cueball->setPosition(QVector2D(mouse->localPos()));
-		if (mouse->type() == QEvent::MouseButtonRelease) {
+		m_cueball->setPosition(QVector2D(mouse.localPos()));
+		if (mouse.type() == QEvent::MouseButtonRelease) {
 			m_cuesunk = false;
 			// stop the ball from moving when placed
 			m_cueball->setVelocity(QVector2D());

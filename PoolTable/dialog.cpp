@@ -28,15 +28,15 @@ void Dialog::paintEvent(QPaintEvent *)
 }
 
 void Dialog::mouseMoveEvent(QMouseEvent* event) {
-	m_game->handleEvent(event);
+	m_game->handleEvent(*event);
 	event->accept();
 }
 void Dialog::mousePressEvent(QMouseEvent* event) {
-	m_game->handleEvent(event);
+	m_game->handleEvent(*event);
 	event->accept();
 }
 void Dialog::mouseReleaseEvent(QMouseEvent* event) {
-	m_game->handleEvent(event);
+	m_game->handleEvent(*event);
 	event->accept();
 }
 

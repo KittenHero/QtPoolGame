@@ -3,6 +3,9 @@
 ## Base Code
 
 - How well designed was the code for extensions
+
+The base code was well designed with abstract classes appropriately placed where extension was most likely to happen (on the ball, table and factory classes)
+
 - what particular elements aided or hindered extensibility
 - How well documented was the code with respect
 - Was the coding well done
@@ -21,7 +24,6 @@
 - setters have set but getters don't have get
 - abstract factory is not informative name
 - Initializer has no state and one method
-- IO coupled with logic in Initializer class
 - Wildly inconsistent spacing around operators and variables
 - memory leaks
 

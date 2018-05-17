@@ -14,7 +14,7 @@ public:
 	 * @brief handles input for shooting cueball
 	 * @param mouse
 	 */
-	void handleEvent(QMouseEvent*) override;
+	void handleEvent(QMouseEvent &) override;
 	/**
 	 * @brief draws visual cue when shooting
 	 * @param painter

@@ -8,7 +8,7 @@ together {
         --
         +start() : void
         #paintEvent(QPaintEvent) : void
-        #event(QEvent) : bool
+        #event(QMouseEvent) : bool
         --slots--
         +runSimulationStep() : void
     }
@@ -19,9 +19,7 @@ together {
         #m_cueball : Ball
         +{abstract} simulateTimeStep(float) : void
         +{abstract} draw(QPainter) : void
-        +{abstract} handleEvent(QEvent) : void
-        #collisionVector(Ball, Ball) : QVector2D
-        #collisionVector(Table, Ball) : QVector2D
+        +{abstract} handleEvent(QMouseEvent) : void
     }
     
     abstract class Ball <<abstract>> {
@@ -51,6 +49,8 @@ together {
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
         +size() : QSize
+        -collisionVector(Ball, Ball) : QVector2D
+        -collisionVector(Ball) : QVector2D
         -resolveBallCollision(Ball, Ball, collisionVector) : void
         -resolveTableCollision(Ball, collisionVector) : void
     }
@@ -96,19 +96,19 @@ together {
         -m_game : PoolGame
         +draw(QPainter) : void
         +simulateTimeStep(float) : void
-        +handleEvent(QEvent) : void
+        +handleEvent(QMouseEvent) : void
     }
     
     class CueBallControlFeature {
 		-m_click : bool
 		-m_force : QVector2D
-        +handleEvent(QEvent) : void
+        +handleEvent(QMouseEvent) : void
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
     }
     
     class ExplodingBallFeature {
-        +handleEvent(QEvent) : void
+        +handleEvent(QMouseEvent) : void
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
     }
@@ -117,7 +117,7 @@ together {
 		-m_table : PocketedTable
 		-m_cuesunk : bool
 		-m_cue_radius : double
-        +handleEvent(QEvent) : void
+        +handleEvent(QMouseEvent) : void
         +simulateTimeStep(float) : void
         +draw(QPainter) : void
     }
@@ -129,7 +129,7 @@ together {
         
         +draw(QPainter) : void
         +setColor(QColor) : void
-        +nestedBalls() : vector<Ball>&
+        +nestedBalls() : vector<Ball>
         +{static} toggleInnerVisibility() : void
     }
     

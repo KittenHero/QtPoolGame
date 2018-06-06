@@ -22,6 +22,7 @@ public:
         m_brush(colour), m_pos(position), m_velocity(velocity),
         m_mass(mass), m_radius(radius) {}
     Ball() {}
+	virtual Ball* clone() const = 0;
 
     /**
      * @brief render - draw the ball to the screen
@@ -50,6 +51,7 @@ public:
     virtual double getMass() const { return m_mass; }
     virtual double getRadius() const { return m_radius; }
     virtual QVector2D getPosition() const { return m_pos; }
+	virtual const QColor& getColour() const { return m_brush.color(); }
     virtual void setPosition(QVector2D p) { m_pos = p; }
 
     // whether the ball will break, and handle accordingly
@@ -67,6 +69,7 @@ public:
      * @param painter - QPainter that is owned by the dialog
      */
     void render(QPainter &painter, const QVector2D& offset) override;
+	Ball* clone() const override { return new StageOneBall(*this); }
 };
 
 class CompositeBall : public Ball {
@@ -80,6 +83,12 @@ public:
     CompositeBall(QColor colour, QVector2D position,
                  QVector2D velocity, double mass, int radius, double strength) :
         Ball(colour, position, velocity, mass, radius), m_strength(strength) { }
+	Ball* clone() const override {
+		auto* b = new CompositeBall(*this);
+		for (auto it = b->m_children.begin(); it != b->m_children.end(); ++it)
+			*it = (*it)->clone();
+		return b;
+	}
 
     /**
      * @brief render - draw the ball to the screen

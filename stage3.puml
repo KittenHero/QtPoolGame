@@ -145,11 +145,13 @@ abstract class Ball <<abstract>> {
 	# m_mass : double
 	# m_radius : int
 	# MovementEpsilon : int {static}
-	+ render(QPainter, QVector2D offset) : void
+	+ clone() : Ball {abstract}
+	+ render(QPainter, QVector2D offset) : void {abstract}
 	+ translate(QVector2D) : void
 	+ applyBreak(QVector2D deltaV, vector<Ball> parentlist) : void
 }
 class StageOneBall {
+	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 }
 class CompositeBall {
@@ -157,11 +159,13 @@ class CompositeBall {
 	# m_renderChildren : true
 	# recursiveRender(QPainter, QVector2D offset) : void
 	# m_strength : double
+	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 	+ applyBreak(QVector2D deltaV, vector<Ball> parentlist) : void
 }
 abstract class BallDecorator <<abstract>> {
 	# m_subBall : Ball
+	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 	+ applyBreak(QVector2D deltaV, vector<Ball> parentlist) : void
 }
@@ -170,6 +174,7 @@ class CueBall {
 	# m_endMousePos : QVector2D
 	# isDragging : bool
 	# isSubBallMoving() : bool
+	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 	+ mouseClickEvent(QMouseEvent) : void
 	+ mouseMoveEvent(QMouseEvent) : void
@@ -178,6 +183,7 @@ class CueBall {
 class BallSparkleDecorator {
 	# fadeRate : double {static}
 	# m_sparklePositons : vector<Sparkle>
+	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 }
 class BallSparkleDecorator::Sparkle <<struct>> {
@@ -190,6 +196,7 @@ class BallSmashDecorator {
 	# fadeRate : double {static}
 	# moveRate : double {static}
 	# addCrumbs(QPointF) : void
+	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 }
 class BallSmashDecorator::Crumb <<struct>> {
@@ -225,17 +232,19 @@ GameDirector          *---  GameBuilder
 GameBuilder           *---  AbstractStageFactory
 GameBuilder           <|--  StageOneBuilder
 GameBuilder           <|--  StageTwoBuilder
-StageOneBuilder       -->   Game
-StageTwoBuilder       -->   Game
+Game                  <---  StageOneBuilder
+Game                  <---  StageTwoBuilder
 AbstractStageFactory  <|--  StageOneFactory
 AbstractStageFactory  <|--  StageTwoFactory
+StageOneBuilder       ...>  StageOneFactory
+StageTwoBuilder       ...>  StageTwoFactory
 Dialog                *---  Game
 
 StageOneBall          --|>  Ball
 CompositeBall         --|>  Ball
 StageOneTable         --|>  Table
 StageTwoTable         --|>  Table
-Pocket                *---  StageTwoTable
+StageTwoTable         ---*  Pocket
 
 StageOneFactory       -->   StageOneTable
 StageOneFactory       -->   StageOneBall
@@ -244,12 +253,13 @@ StageTwoFactory       -->   CompositeBall
 StageTwoFactory       -->   Pocket
 
 BallDecorator         <|--  Ball
-BallDecorator         ---*  Ball
+BallDecorator         ---o  Ball
+CompositeBall         ---o  Ball
 CueBall               --|>  BallDecorator
 BallSparkleDecorator  --|>  BallDecorator
 BallSmashDecorator    --|>  BallDecorator
-BallSparkleDecorator  ...>  BallSparkleDecorator::Sparkle
-BallSmashDecorator    ...>  BallSmashDecorator::Crumb
+BallSparkleDecorator::Sparkle  <...  BallSparkleDecorator
+BallSmashDecorator::Crumb    <...  BallSmashDecorator
 StageTwoBuilder       ...>  CueBall
 StageTwoBuilder       ...>  BallSparkleDecorator
 StageTwoBuilder       ...>  BallSmashDecorator

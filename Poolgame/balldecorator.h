@@ -14,6 +14,7 @@ protected:
     Ball* m_subBall;
 public:
     BallDecorator(Ball* b) : m_subBall(b) {}
+	virtual Ball* clone() const override { return new BallDecorator(this->m_subBall->clone()); }
     virtual ~BallDecorator() { delete m_subBall; }
     // mess of forwarded requests
     // is this the downside of a decorator..?
@@ -51,6 +52,12 @@ protected:
 
 public:
     CueBall(Ball* b) : BallDecorator(b), MouseEventable(this) {}
+	Ball* clone() const override {
+		CueBall* b = new CueBall(this->m_subBall->clone());
+		b->m_startMousePos = this->m_startMousePos;
+		b->m_endMousePos = this->m_endMousePos;
+		return b;
+	}
     ~CueBall() {}
 
     /**
@@ -103,13 +110,18 @@ protected:
     std::vector<Sparkle> m_sparklePositions;
 public:
     BallSparkleDecorator(Ball* b) : BallDecorator(b) {}
+	Ball* clone() const override {
+		auto* b = new BallSparkleDecorator(*this);
+		b->m_sparklePositions = this->m_sparklePositions;
+		return b;
+	}
 
     /**
      * @brief render - draw the underlying ball and also the sparkles
      * @param painter - the brush to use to draw
      * @param offset - the offset that this ball is from the origin
      */
-    void render(QPainter &painter, const QVector2D &offset);
+	void render(QPainter &painter, const QVector2D &offset) override;
 };
 
 class BallSmashDecorator : public BallDecorator {
@@ -134,6 +146,11 @@ protected:
     void addCrumbs(QPointF cPos);
 public:
     BallSmashDecorator(Ball* b) : BallDecorator(b) {}
+	Ball* clone() const override {
+		auto* b = new BallSmashDecorator(this->m_subBall->clone());
+		b->m_crumbs = this->m_crumbs;
+		return b;
+	}
 
     /**
      * @brief changeVelocity - set the velocity of the ball, as well as generate particles (if applicable)

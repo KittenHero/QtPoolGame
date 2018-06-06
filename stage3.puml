@@ -1,0 +1,261 @@
+@startuml
+
+interface AbstractStageFactory <<interface>> {
+	+ makeBall(QJsonObject) : Ball {abstract}
+	+ makeTable(QJsonObject) : Table {abstract}
+	+ makePocket(QJsonObject) : Pocket {abstract}
+}
+
+class StageOneFactory {
+	+ makeBall(QJsonObject) : Ball
+	+ makeTable(QJsonObject) : Table
+	+ makePocket(QJsonObject) : Pocket
+}
+class StageTwoFactory {
+	+ makeBall(QJsonObject) : Ball
+	+ makeTable(QJsonObject) : Table
+	+ makePocket(QJsonObject) : Pocket
+}
+
+abstract class GameBuilder <<abstract>> {
+	# m_factory : AbstractStageFactory
+	# m_buildingBalls : vector<Ball> 
+	# m_buildingTable : Table
+	+ addBall(QJsonObject) : void {abstract}
+	+ addTable(QJsonObject) : void {abstract} 
+	+ getResult() : Game {abstract}
+}
+class StageOneBuilder {
+	+ addBall(QJsonObject) : void
+	+ addTable(QJsonObject) : void
+	+ getResult() : Game
+}
+class StageTwoBuilder {
+	+ addBall(QJsonObject) : void
+	+ addTable(QJsonObject) : void
+	+ getResult() : Game
+	- isValidPocket(double x, double y, double r, double w, double h) : bool {static}
+	- isValidColour(Qstring) : bool {static}
+	- convertAndCheckBall(QJsonObject data, double parentRadius, string parentColour) : QJsonObject {static}
+	- addDefaultsToBall(QJsonObject data, char* defaultColour) : QJsonObject {static}
+	- ballWithinTable(Ball, Table) : bool {static}
+	- convertToValidTable(QJsonObject) : QJsonObject {static}
+	- convertAndCheckPocket(QJsonObject, double tableW, double tableH) : QJsonObject {static}
+}
+
+class GameDirector {
+	- m_builder : GameBuilder
+	- m_conf : QJsonObject
+	+ setBuilder(GameBuilder) : void
+	+ createGame() : void
+}
+
+class Game {
+	- m_balls : vector<Ball>
+	- m_table : Table
+	- m_screenshake : QVector2D
+	- m_shakeRadius : double
+	- m_shakeAngle : double
+	- SCREENSHAKEDIST : double
+	- incrementShake(double amount) : void
+	- updateShake(double dt) : void
+	- m_mouseEventFunctions : MouseEventTable::EventQueue
+	+ render(QPainter) : void
+	+ animate(double dt) : void
+	+ getMinimumWidth() : int
+	+ getMinimumHeight() : int
+	+ resolveCollison(Table, Ball) : QVector2D
+	+ resolveCollison(Ball, Ball) : pair<QVector2D, QVector2D>
+	+ isColliding(Ball, Ball) : bool
+	+ addMouseFunctions(MouseEventTable::EventQueue) : void
+	+ getEventFns() : MouseEventTable::EventQueue
+}
+
+abstract class MouseEventable <<abstract>> {
+	+ MouseFn : typedef function<void(QMouseEvent*)> 
+	+ EventHook : typedef pair<MouseFn, EVENTS>
+	+ EventQueue : typedef vector<weak_ptr<EventHook>>
+	# m_ownedFns : vector<shared_ptr<EventHook>>
+	+ getEvents() : EventQueue
+	+ mouseClickEvent(OverrideTest) : void
+	+ mouseMoveEvent(OverrideTest) : void
+	+ mouseReleaseEvent(OverrideTest) : void
+	+ mouseClickEvent(QMouseEvent) : void
+	+ mouseMoveEvent(QMouseEvent) : void
+	+ mouseReleaseEvent(QMouseEvent) : void
+}
+enum MouseEventable::EVENTS <<enum>> {
+	MouseClickFn
+	MouseRelFn
+	MouseMoveFn
+}
+
+class Dialog {
+	- aTimer : QTimer
+	- dTimer : QTimer
+	- ui : Ui::Dialog
+	- m_ame : Game
+	- evalAllEventsOfTypeSpecified(MouseEventable::EVENTS, QMouseEvent) : void
+	--slots--
+	+ nextAnim() : void
+	+ tryRender() : void
+	+ mousePressEvent(QMouseEvent) : void
+	+ mouseReleaseEvent(QMouseEvent) : void
+	+ mouseMoveEvent(QMouseEvent) : void
+}
+
+class MouseEventable::OverrideTest <<struct>> {
+	+ operator() : QMouseEvent
+}
+
+class Pocket {
+	- m_radius : double
+	- m_pos : QVector2D
+	- m_pocketBrush : QBrush
+	- m_sunk : size_t
+	+ render(QPainter, QVector2D offset) : void
+	+ contains(QVector2D center, double radius) : bool
+	+ incrementSunk() : void
+}
+
+abstract class Table <<abstract>> {
+	# m_width : int
+	# m_height : int
+	# m_brush : QBrush
+	# m_friction : double
+	+ render(QPainter, QVector2D offset) : void {abstract}
+	+ sinks(Ball) : bool
+}
+
+class StageOneTable {
+	+ render(QPainter, QVector2D offset) : void
+}
+
+class StageTwoTable {
+	# m_pockets : vector<Pocket>
+	+ render(QPainter, QVector2D offset) : void
+	+ sinks(Ball) : void
+	+ addPockeet(Pocket) : void
+}
+
+abstract class Ball <<abstract>> {
+	# m_brush : QBrush
+	# m_pos : QVector2D
+	# m_velocity : QVector2D
+	# m_mass : double
+	# m_radius : int
+	# MovementEpsilon : int {static}
+	+ render(QPainter, QVector2D offset) : void
+	+ translate(QVector2D) : void
+	+ applyBreak(QVector2D deltaV, vector<Ball> parentlist) : void
+}
+class StageOneBall {
+	+ render(QPainter, QVector2D offset) : void
+}
+class CompositeBall {
+	# m_children : vector<Ball>
+	# m_renderChildren : true
+	# recursiveRender(QPainter, QVector2D offset) : void
+	# m_strength : double
+	+ render(QPainter, QVector2D offset) : void
+	+ applyBreak(QVector2D deltaV, vector<Ball> parentlist) : void
+}
+abstract class BallDecorator <<abstract>> {
+	# m_subBall : Ball
+	+ render(QPainter, QVector2D offset) : void
+	+ applyBreak(QVector2D deltaV, vector<Ball> parentlist) : void
+}
+class CueBall {
+	# m_startMousePos : QVector2D
+	# m_endMousePos : QVector2D
+	# isDragging : bool
+	# isSubBallMoving() : bool
+	+ render(QPainter, QVector2D offset) : void
+	+ mouseClickEvent(QMouseEvent) : void
+	+ mouseMoveEvent(QMouseEvent) : void
+	+ mouseReleaseEvent(QMouseEvent) : void
+}
+class BallSparkleDecorator {
+	# fadeRate : double {static}
+	# m_sparklePositons : vector<Sparkle>
+	+ render(QPainter, QVector2D offset) : void
+}
+class BallSparkleDecorator::Sparkle <<struct>> {
+	+ pos : QPointF
+	+ opacity : double
+	+ width : double
+	+ height : double
+}
+class BallSmashDecorator {
+	# fadeRate : double {static}
+	# moveRate : double {static}
+	# addCrumbs(QPointF) : void
+	+ render(QPainter, QVector2D offset) : void
+}
+class BallSmashDecorator::Crumb <<struct>> {
+	+ pos : QPointF
+	+ width : double
+	+ height : double
+	+ dir : QVector2D
+	+ opacity : double
+}
+
+class Key #ffee77 {
+	+public
+	#protected
+	-private
+	static member {static}
+	+publiic method()
+	#protected method()
+	-private method()
+	static method() {static}
+}
+
+hide circle
+hide empty members
+
+skinparam Class {
+	BackgroundColor<<abstract>> PaleGreen
+	BackgroundColor<<interface>> PowderBlue
+	BackgroundColor<<enum>> MistyRose
+	BackgroundColor<<struct>> Lavender
+}
+
+GameDirector          *---  GameBuilder
+GameBuilder           *---  AbstractStageFactory
+GameBuilder           <|--  StageOneBuilder
+GameBuilder           <|--  StageTwoBuilder
+StageOneBuilder       -->   Game
+StageTwoBuilder       -->   Game
+AbstractStageFactory  <|--  StageOneFactory
+AbstractStageFactory  <|--  StageTwoFactory
+Dialog                *---  Game
+
+StageOneBall          --|>  Ball
+CompositeBall         --|>  Ball
+StageOneTable         --|>  Table
+StageTwoTable         --|>  Table
+Pocket                *---  StageTwoTable
+
+StageOneFactory       -->   StageOneTable
+StageOneFactory       -->   StageOneBall
+StageTwoFactory       -->   StageTwoTable
+StageTwoFactory       -->   CompositeBall
+StageTwoFactory       -->   Pocket
+
+BallDecorator         <|--  Ball
+BallDecorator         ---*  Ball
+CueBall               --|>  BallDecorator
+BallSparkleDecorator  --|>  BallDecorator
+BallSmashDecorator    --|>  BallDecorator
+BallSparkleDecorator  ...>  BallSparkleDecorator::Sparkle
+BallSmashDecorator    ...>  BallSmashDecorator::Crumb
+StageTwoBuilder       ...>  CueBall
+StageTwoBuilder       ...>  BallSparkleDecorator
+StageTwoBuilder       ...>  BallSmashDecorator
+
+MouseEventable        ...>  MouseEventable::OverrideTest
+MouseEventable        ...>  MouseEventable::EVENTS
+CueBall               --|>  MouseEventable
+
+@enduml

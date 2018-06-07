@@ -30,4 +30,7 @@ public:
 
     /** add whether this pocket has sunk a ball */
     void incrementSunk() { ++m_sunk; }
+
+	const QVector2D& getPosition() const { return m_pos; }
+	double getRadius() const { return m_radius; }
 };

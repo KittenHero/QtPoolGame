@@ -3,6 +3,7 @@
 #include "ball.h"
 #include "utils.h"
 #include "mouseeventable.h"
+#include "pubsub.h"
 
 /**
  * @brief The BallDecorator class
@@ -14,7 +15,6 @@ protected:
     Ball* m_subBall;
 public:
     BallDecorator(Ball* b) : m_subBall(b) {}
-	virtual Ball* clone() const override { return new BallDecorator(this->m_subBall->clone()); }
     virtual ~BallDecorator() { delete m_subBall; }
     // mess of forwarded requests
     // is this the downside of a decorator..?
@@ -25,6 +25,7 @@ public:
     virtual void changeVelocity(const QVector2D& delta) override { m_subBall->changeVelocity(delta); }
     virtual void multiplyVelocity(const QVector2D& vel) override { m_subBall->multiplyVelocity(vel); }
 
+	virtual const QColor& getColour() const override { return m_subBall->getColour(); }
     virtual double getMass() const override { return m_subBall->getMass(); }
     virtual double getRadius() const override { return m_subBall->getRadius(); }
     virtual QVector2D getPosition() const override { return m_subBall->getPosition(); }
@@ -38,27 +39,27 @@ public:
  * The ball will only be able to be controlled if the mouse click&drag event originated at
  * the position of the cue ball.
  */
-class CueBall : public BallDecorator, public MouseEventable {
+class CueBall : public BallDecorator, public MouseEventable, public Subject {
 protected:
     // keep track of where the mouse click started at
     QVector2D m_startMousePos;
     // and the end
     QVector2D m_endMousePos;
     // whether the drag is happening
-    bool isDragging = false;
+	bool m_dragging = false;
 
-    // whether we can consider this ball as having stopped.
-    inline bool isSubBallMoving() const { return m_subBall->getVelocity().length() > MovementEpsilon; }
 
 public:
-    CueBall(Ball* b) : BallDecorator(b), MouseEventable(this) {}
-	Ball* clone() const override {
-		CueBall* b = new CueBall(this->m_subBall->clone());
-		b->m_startMousePos = this->m_startMousePos;
-		b->m_endMousePos = this->m_endMousePos;
-		return b;
-	}
+	CueBall(Ball* b) : BallDecorator(b), MouseEventable(this), Subject() {}
+	CueBall(const CueBall* cb) : BallDecorator(cb->m_subBall->clone()), MouseEventable(this), Subject(*cb) {}
+	Ball* clone() const override { return new CueBall(this); }
     ~CueBall() {}
+
+	bool isDragging() { return m_dragging; }
+	QVector2D getMouseStart() { return m_startMousePos; }
+	QVector2D getMouseEnd() { return m_endMousePos; }
+	// whether we can consider this ball as having stopped.
+	bool isMoving() const { return m_subBall->getVelocity().length() > MovementEpsilon; }
 
     /**
      * @brief render - draw this ball and the drag indicator if applicable
@@ -67,7 +68,6 @@ public:
      */
     void render(QPainter &painter, const QVector2D &offset) override;
 
-public:
     /**
      * @brief mouseClickEvent - update where the start of the mouse drag is.
      *      Chooses not to draw IF the click is not within bounds
@@ -111,7 +111,7 @@ protected:
 public:
     BallSparkleDecorator(Ball* b) : BallDecorator(b) {}
 	Ball* clone() const override {
-		auto* b = new BallSparkleDecorator(*this);
+		auto* b = new BallSparkleDecorator(this->m_subBall->clone());
 		b->m_sparklePositions = this->m_sparklePositions;
 		return b;
 	}

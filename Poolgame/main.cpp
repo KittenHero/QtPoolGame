@@ -35,9 +35,12 @@ int main(int argc, char *argv[])
 
     // create our game based on our config
     GameDirector director(&conf);
-    // use builder2 if we're stage two (defaults to false), otherwise no
-    if (conf.value("stage2").toBool(false) == true) {
-       director.setBuilder(new StageTwoBuilder());
+
+	if (conf.value("stage3").toBool(false)) {
+		director.setBuilder(new StageThreeBuilder());
+	// use builder2 if we're stage two (defaults to false), otherwise no
+	} else if (conf.value("stage2").toBool(false) == true) {
+		director.setBuilder(new StageTwoBuilder());
     } else {
         // set and transfer ownership of this builder to the director
         director.setBuilder(new StageOneBuilder());

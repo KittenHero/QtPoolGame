@@ -1,6 +1,5 @@
 #pragma once
 #include <QJsonObject>
-#include <functional>
 #include <QMouseEvent>
 
 #include "abstractstagefactory.h"
@@ -11,11 +10,13 @@
 #include "utils.h"
 
 class Game {
+protected:
     std::vector<Ball*>* m_balls;
     Table* m_table;
 
-    // screenshake stuff
-    QVector2D m_screenshake;
+	// screenshake stuff
+	QVector2D m_screenshake;
+private:
     double m_shakeRadius = 0.0;
     double m_shakeAngle = 0;
     static constexpr double SCREENSHAKEDIST = 10.0;
@@ -32,19 +33,19 @@ private:
      */
     void updateShake(double dt);
 public:
-    ~Game();
+	virtual ~Game();
     Game(std::vector<Ball*>* balls, Table* table) :
         m_balls(balls), m_table(table) {}
     /**
      * @brief Draws all owned objects to the screen (balls and table)
      * @param painter - qtpainter to blit to screen with
      */
-    void render(QPainter& painter) const;
+	virtual void render(QPainter& painter) const;
     /**
      * @brief Updates the positions of all objects within, based on how much time has changed
      * @param dt - time elapsed since last frame in seconds
      */
-    void animate(double dt);
+	virtual void animate(double dt);
 
     /* how large the window's width should at least be */
     int getMinimumWidth() const { return m_table->getWidth(); }
@@ -91,4 +92,22 @@ public:
      * @return event queue of event functions
      */
     MouseEventable::EventQueue& getEventFns() { return m_mouseEventFunctions; }
+
+
+	virtual void handleKeyEvent(QKeyEvent*) {}
+};
+
+class StageThreeGame : public Game, public Observer {
+protected:
+	struct GameState {
+		Table* table;
+		std::vector<Ball*> balls;
+	};
+	mutable std::vector<GameState> m_states;
+public:
+	StageThreeGame(Game* base);
+	void handleKeyEvent(QKeyEvent*) override;
+	void update(Subject *) override;
+	void saveState() const;
+	void undo();
 };

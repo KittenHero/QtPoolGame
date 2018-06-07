@@ -95,10 +95,10 @@ void Game::animate(double dt) {
     // clean up them trash-balls
     for (Ball* b : toBeRemoved) {
         delete b;
-        // delete all balls marked with nullptr
-        m_balls->erase(std::find(m_balls->begin(), m_balls->end(), nullptr));
-    }
-    for (Ball* b: toBeAdded) m_balls->push_back(b);
+	}
+	// delete all balls marked with nullptr
+	m_balls->erase(std::remove(m_balls->begin(), m_balls->end(), nullptr), m_balls->end());
+	for (Ball* b: toBeAdded) m_balls->push_back(b);
 
     updateShake(dt);
 }
@@ -181,4 +181,61 @@ std::pair<QVector2D, QVector2D> Game::resolveCollision(Ball* ballA, Ball* ballB)
 
     // return the change in velocities for the two balls
     return std::make_pair(ballA->getVelocity() - ballAStartingVelocity, ballB->getVelocity() - ballBStartingVelocity);
+}
+
+#ifdef QT_DEBUG
+QDebug& operator <<(QDebug& qd, Ball* b) {
+	return qd << "Ball(" << b->getRadius() << b->getColour() << b->getMass() << b->getPosition() << b->getVelocity() << ")";
+}
+#endif
+
+void StageThreeGame::saveState() const {
+	this->m_states.emplace_back();
+	GameState& state = this->m_states.back();
+	std::transform(this->m_balls->cbegin(), this->m_balls->cend(), std::back_inserter(state.balls),
+		[](Ball* b) -> Ball* { return b->clone(); }
+	);
+	state.table = this->m_table->clone();
+}
+
+CueBall* findCue(std::vector<Ball*>& balls) {
+	auto cue_it = std::find_if(balls.cbegin(), balls.cend(),
+		[](Ball* b) -> bool { return dynamic_cast<CueBall*>(b); }
+	);
+	return static_cast<CueBall*> (*cue_it);
+}
+
+StageThreeGame::StageThreeGame(Game *base)
+	: Game(*base) {
+	findCue(*this->m_balls)->attach(this);
+	saveState();
+}
+
+void StageThreeGame::update(Subject* s) {
+	if (!static_cast<CueBall*>(s)->isDragging())
+		saveState();
+}
+
+void StageThreeGame::undo() {
+	{
+		this->getEventFns().clear();
+		GameState& prev = this->m_states.back();
+		for (const Ball* b : *this->m_balls)
+			delete b;
+		delete this->m_table;
+		this->m_balls->clear();
+
+		for (Ball* b : prev.balls)
+			this->m_balls->push_back(b);
+		this->m_table = prev.table;
+
+		this->addMouseFunctions(findCue(prev.balls)->getEvents());
+	}
+	this->m_states.pop_back();
+	if (!this->m_states.size()) this->saveState();
+}
+
+void StageThreeGame::handleKeyEvent(QKeyEvent * event) {
+	if (event->type() == QEvent::KeyRelease && event->key() == Qt::Key_R)
+		this->undo();
 }

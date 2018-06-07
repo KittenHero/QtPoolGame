@@ -74,3 +74,7 @@ void Dialog::evalAllEventsOfTypeSpecified(MouseEventable::EVENTS t, QMouseEvent 
         }
     }
 }
+
+void Dialog::keyReleaseEvent(QKeyEvent* event) {
+	m_game->handleKeyEvent(event);
+}

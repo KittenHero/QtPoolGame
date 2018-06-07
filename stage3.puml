@@ -42,6 +42,9 @@ class StageTwoBuilder {
 	- convertToValidTable(QJsonObject) : QJsonObject {static}
 	- convertAndCheckPocket(QJsonObject, double tableW, double tableH) : QJsonObject {static}
 }
+class StageThreeBuilder {
+	+ getResult() : Game
+}
 
 class GameDirector {
 	- m_builder : GameBuilder
@@ -69,6 +72,28 @@ class Game {
 	+ isColliding(Ball, Ball) : bool
 	+ addMouseFunctions(MouseEventTable::EventQueue) : void
 	+ getEventFns() : MouseEventTable::EventQueue
+	+ handleKeyEvent(QKeyEvent) : void
+}
+
+class StageThreeGame {
+	# m_states : vector<GameState>
+	+ saveState() : void
+	+ undo() : void
+	+ update(Subject) : void
+	+ handleKeyEvent(QKeyEvent) : void
+}
+class StageThreeGame::GameState {
+	+ table : Table
+	+ balls : vector<Ball>
+}
+class BallGuide {
+	- KONAMI_LEN : int {static}
+	- KONAMI_CODE : int[] {static}
+	- activated : int
+	- m_points : vector<QVector2D>
+	update(Subject) : void
+	render(QPainter) : void
+	handleKeyEvent(QKeyEvent) : void
 }
 
 abstract class MouseEventable <<abstract>> {
@@ -77,9 +102,6 @@ abstract class MouseEventable <<abstract>> {
 	+ EventQueue : typedef vector<weak_ptr<EventHook>>
 	# m_ownedFns : vector<shared_ptr<EventHook>>
 	+ getEvents() : EventQueue
-	+ mouseClickEvent(OverrideTest) : void
-	+ mouseMoveEvent(OverrideTest) : void
-	+ mouseReleaseEvent(OverrideTest) : void
 	+ mouseClickEvent(QMouseEvent) : void
 	+ mouseMoveEvent(QMouseEvent) : void
 	+ mouseReleaseEvent(QMouseEvent) : void
@@ -102,10 +124,6 @@ class Dialog {
 	+ mousePressEvent(QMouseEvent) : void
 	+ mouseReleaseEvent(QMouseEvent) : void
 	+ mouseMoveEvent(QMouseEvent) : void
-}
-
-class MouseEventable::OverrideTest <<struct>> {
-	+ operator() : QMouseEvent
 }
 
 class Pocket {
@@ -172,8 +190,8 @@ abstract class BallDecorator <<abstract>> {
 class CueBall {
 	# m_startMousePos : QVector2D
 	# m_endMousePos : QVector2D
-	# isDragging : bool
-	# isSubBallMoving() : bool
+	# m_dragging : bool
+	+ isSubBallMoving() : bool
 	+ clone() : Ball
 	+ render(QPainter, QVector2D offset) : void
 	+ mouseClickEvent(QMouseEvent) : void
@@ -207,6 +225,16 @@ class BallSmashDecorator::Crumb <<struct>> {
 	+ opacity : double
 }
 
+abstract class Subject <<abstract>> {
+	# m_observers : vector<Observer>
+	+ attach(Observer) : void
+	+ detach(Observer) : void
+	+ notify(Observer) : void
+}
+abstract class Observer <<abstract>> {
+	update(Subject) : void
+}
+
 class Key #ffee77 {
 	+public
 	#protected
@@ -228,44 +256,53 @@ skinparam Class {
 	BackgroundColor<<struct>> Lavender
 }
 
-GameDirector          *---  GameBuilder
-GameBuilder           *---  AbstractStageFactory
-GameBuilder           <|--  StageOneBuilder
-GameBuilder           <|--  StageTwoBuilder
-Game                  <---  StageOneBuilder
-Game                  <---  StageTwoBuilder
-AbstractStageFactory  <|--  StageOneFactory
-AbstractStageFactory  <|--  StageTwoFactory
-StageOneBuilder       ...>  StageOneFactory
-StageTwoBuilder       ...>  StageTwoFactory
-Dialog                *---  Game
+GameDirector                   *---  GameBuilder
+GameBuilder                    *---  AbstractStageFactory
+GameBuilder                    <|--  StageOneBuilder
+GameBuilder                    <|--  StageTwoBuilder
+Game                           <---  StageOneBuilder
+Game                           <---  StageTwoBuilder
+AbstractStageFactory           <|--  StageOneFactory
+AbstractStageFactory           <|--  StageTwoFactory
+StageOneBuilder                ...>  StageOneFactory
+StageTwoBuilder                ...>  StageTwoFactory
+Dialog                         *---  Game
 
-StageOneBall          --|>  Ball
-CompositeBall         --|>  Ball
-StageOneTable         --|>  Table
-StageTwoTable         --|>  Table
-StageTwoTable         ---*  Pocket
+StageOneBall                   --|>  Ball
+CompositeBall                  --|>  Ball
+StageOneTable                  --|>  Table
+StageTwoTable                  --|>  Table
+StageTwoTable                  ---*  Pocket
 
-StageOneFactory       -->   StageOneTable
-StageOneFactory       -->   StageOneBall
-StageTwoFactory       -->   StageTwoTable
-StageTwoFactory       -->   CompositeBall
-StageTwoFactory       -->   Pocket
+StageOneFactory                -->   StageOneTable
+StageOneFactory                -->   StageOneBall
+StageTwoFactory                -->   StageTwoTable
+StageTwoFactory                -->   CompositeBall
+StageTwoFactory                -->   Pocket
 
-BallDecorator         <|--  Ball
-BallDecorator         ---o  Ball
-CompositeBall         ---o  Ball
-CueBall               --|>  BallDecorator
-BallSparkleDecorator  --|>  BallDecorator
-BallSmashDecorator    --|>  BallDecorator
+Game                           <|--  StageThreeGame
+StageThreeGame                 ...>  StageThreeGame::GameState
+BallGuide                      --|>  StageThreeGame
+Observer                       <|--  StageThreeGame
+Subject                        <|--  CueBall
+StageThreeGame                 ...>  CueBall
+Subject                        o..>  Observer
+
+BallDecorator                  <|--  Ball
+BallDecorator                  ---*  Ball
+CompositeBall                  ---o  Ball
+CueBall                        --|>  BallDecorator
+BallSparkleDecorator           --|>  BallDecorator
+BallSmashDecorator             --|>  BallDecorator
 BallSparkleDecorator::Sparkle  <...  BallSparkleDecorator
-BallSmashDecorator::Crumb    <...  BallSmashDecorator
-StageTwoBuilder       ...>  CueBall
-StageTwoBuilder       ...>  BallSparkleDecorator
-StageTwoBuilder       ...>  BallSmashDecorator
+BallSmashDecorator::Crumb      <...  BallSmashDecorator
+StageTwoBuilder                ...>  CueBall
+StageTwoBuilder                ...>  BallSparkleDecorator
+StageTwoBuilder                ...>  BallSmashDecorator
+StageThreeBuilder              --|>  StageTwoBuilder
+BallGuide                      <---  StageThreeBuilder
 
-MouseEventable        ...>  MouseEventable::OverrideTest
-MouseEventable        ...>  MouseEventable::EVENTS
-CueBall               --|>  MouseEventable
+MouseEventable                 ...>  MouseEventable::EVENTS
+CueBall                        --|>  MouseEventable
 
 @enduml

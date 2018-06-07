@@ -18,6 +18,7 @@ public:
     Table(int width, int height, QColor colour, double friction) :
         m_width(width), m_height(height),
         m_brush(colour), m_friction(friction) {}
+	virtual Table* clone() const = 0;
     /**
      * @brief render - draw the table to screen using the specified painter
      * @param painter - painter to use
@@ -36,6 +37,7 @@ class StageOneTable : public Table
 public:
     StageOneTable(int width, int height, QColor colour, double friction) :
         Table(width, height, colour, friction) {}
+	Table* clone() const override { return new StageOneTable(*this); }
     /**
      * @brief render - draw the stageonetable to screen using the specified painter
      * @param painter - painter to use
@@ -51,6 +53,14 @@ public:
     StageTwoTable(int width, int height, QColor colour, double friction) :
         Table(width, height, colour, friction) {}
 
+	Table* clone() const override {
+		StageTwoTable* t = new StageTwoTable(*this);
+		std::transform(t->m_pockets.begin(), t->m_pockets.end(), t->m_pockets.begin(),
+			[](Pocket* p) -> Pocket* { return new Pocket(*p); }
+		);
+		return t;
+	}
+
     ~StageTwoTable();
 
     /**
@@ -64,4 +74,5 @@ public:
 
     /* self explanatory */
     void addPocket(Pocket* p) { m_pockets.push_back(p); }
+	const std::vector<Pocket*>& getPockets() { return m_pockets; }
 };

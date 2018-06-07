@@ -20,6 +20,8 @@ protected:
      * @brief paintEvent - called whenever window repainting is requested
      */
     void paintEvent(QPaintEvent *);
+	// qt keyboard release
+	void keyReleaseEvent(QKeyEvent *);
 public slots:
     /**
      * @brief nextAnim - move the objects and perform collision events

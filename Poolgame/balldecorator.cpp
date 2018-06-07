@@ -4,8 +4,8 @@
 void CueBall::render(QPainter &painter, const QVector2D &offset) {
     m_subBall->render(painter, offset);
     // stop drawing the line if we're moving at all
-    if (isSubBallMoving()) isDragging = false;
-    if (isDragging) {
+	if (isMoving()) m_dragging = false;
+	if (m_dragging) {
         painter.drawLine(m_startMousePos.toPointF(), m_endMousePos.toPointF());
     }
 }
@@ -15,9 +15,9 @@ void CueBall::mouseClickEvent(QMouseEvent* e) {
     QVector2D p = QVector2D(e->pos());
 
     // don't allow movement if moving
-    if (isSubBallMoving()) {
+	if (isMoving()) {
         // can't be too sure
-        isDragging = false;
+		m_dragging = false;
         return;
     }
 
@@ -28,30 +28,35 @@ void CueBall::mouseClickEvent(QMouseEvent* e) {
     // check whether the click isn't on the ball
     if (m_startMousePos.distanceToPoint(m_subBall->getPosition()) > m_subBall->getRadius()) return;
 
-    isDragging = true;
-
+	m_dragging = true;
+	this->notify();
 }
 
 void CueBall::mouseMoveEvent(QMouseEvent* e) {
     QVector2D p = QVector2D(e->pos());
 
-    if (isSubBallMoving()) {
-        isDragging = false;
+	if (isMoving()) {
+		m_dragging = false;
         return;
     }
     m_endMousePos = p;
+	this->notify();
 }
 
 void CueBall::mouseReleaseEvent(QMouseEvent* e) {
     QVector2D p = QVector2D(e->pos());
     
     // only draw & move if we're allowing the draw action to go ahead
-    if (isDragging) {
+	if (m_dragging) {
         // velocity is the vector that the mouse drew
         m_endMousePos = p;
         QVector2D resultingVel = m_endMousePos - m_startMousePos;
-        isDragging = false;
-        // update ball vel
+		m_dragging = false;
+
+		// notify observers of event before updating velocity
+		this->notify();
+
+		// update ball vel
         m_subBall->changeVelocity(resultingVel);
     }
 }

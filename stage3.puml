@@ -231,7 +231,7 @@ abstract class Subject <<abstract>> {
 	+ detach(Observer) : void
 	+ notify(Observer) : void
 }
-abstract class Observer <<abstract>> {
+interface Observer <<interface>> {
 	update(Subject) : void
 }
 

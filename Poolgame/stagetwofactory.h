@@ -3,7 +3,10 @@
 #include "abstractstagefactory.h"
 #include <QJsonObject>
 
-
+/**
+ * @brief The StageTwoFactory - actually works as specified by interface
+ * apparently doesn't go with stageonefactory either
+ */
 class StageTwoFactory : public AbstractStageFactory
 {
 public:

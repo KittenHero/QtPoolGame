@@ -1,6 +1,11 @@
 #pragma once
 #include "abstractstagefactory.h"
 
+/**
+ * @brief The StageOneFactory
+ * makePocket throws unimplemented
+ * apparently this class doesn't go in the same file as abstractstagefactory
+ */
 class StageOneFactory : public AbstractStageFactory {
 public:
     /**

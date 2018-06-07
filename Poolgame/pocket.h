@@ -5,6 +5,11 @@
 #include <QBrush>
 #include <cmath>
 
+/**
+ * @brief The Pocket
+ * apparently it needs its own class and state
+ * which makes it more annoying when i have to implement undo
+ */
 class Pocket
 {
     double m_radius;

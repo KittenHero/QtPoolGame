@@ -3,11 +3,19 @@
 
 class Subject;
 
+/**
+ * @brief The Observer - gets updated when something happen in the subject
+ * will need to look into the state of the subject to find out
+ * what changed
+ */
 class Observer {
 public:
 	virtual void update(Subject* s) = 0;
 };
 
+/**
+ * @brief The Subject - notifies observers when something happens
+ */
 class Subject {
 protected:
 	// weak reference do not delete

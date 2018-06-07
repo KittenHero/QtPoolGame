@@ -90,6 +90,9 @@ public:
     virtual void mouseReleaseEvent(QMouseEvent* e) override;
 };
 
+/**
+ * @brief The BallSparkleDecorator - Add particle effects to ball
+ */
 class BallSparkleDecorator : public BallDecorator {
 protected:
     // our particle that is drawn
@@ -124,6 +127,9 @@ public:
 	void render(QPainter &painter, const QVector2D &offset) override;
 };
 
+/**
+ * @brief The BallSmashDecorator - add particle effect but doesn't really
+ */
 class BallSmashDecorator : public BallDecorator {
 protected:
     struct Crumb {

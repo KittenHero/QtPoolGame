@@ -4,6 +4,12 @@
 #include "table.h"
 #include "pocket.h"
 
+/**
+ * @brief The AbstractStageFactory
+ * creates Balls and Tables and Pockets apparently
+ * event though the stage one code doesn't have pockets
+ * it's not like there's such a thing as interface segregation
+ */
 class AbstractStageFactory {
 public:
     virtual ~AbstractStageFactory(){}

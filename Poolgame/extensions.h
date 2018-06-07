@@ -1,6 +1,9 @@
 #pragma once
 #include "game.h"
 
+/**
+ * @brief The BallGuide - activate by entering Konami Code
+ */
 class BallGuide : public StageThreeGame {
 	mutable std::vector<QVector2D> m_points;
 	int activated = 0;

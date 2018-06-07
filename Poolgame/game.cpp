@@ -183,12 +183,6 @@ std::pair<QVector2D, QVector2D> Game::resolveCollision(Ball* ballA, Ball* ballB)
     return std::make_pair(ballA->getVelocity() - ballAStartingVelocity, ballB->getVelocity() - ballBStartingVelocity);
 }
 
-#ifdef QT_DEBUG
-QDebug& operator <<(QDebug& qd, Ball* b) {
-	return qd << "Ball(" << b->getRadius() << b->getColour() << b->getMass() << b->getPosition() << b->getVelocity() << ")";
-}
-#endif
-
 void StageThreeGame::saveState() const {
 	this->m_states.emplace_back();
 	GameState& state = this->m_states.back();
@@ -209,6 +203,14 @@ StageThreeGame::StageThreeGame(Game *base)
 	: Game(*base) {
 	findCue(*this->m_balls)->attach(this);
 	saveState();
+}
+
+StageThreeGame::~StageThreeGame() {
+	for (GameState& s : m_states) {
+		delete s.table;
+		for (Ball* b : s.balls)
+			delete b;
+	}
 }
 
 void StageThreeGame::update(Subject* s) {

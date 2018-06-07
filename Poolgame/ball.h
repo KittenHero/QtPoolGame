@@ -5,6 +5,14 @@
 #include <QPainter>
 #include <QVector2D>
 
+/**
+ * @brief The Ball
+ * base class for all balls
+ * pure virtual -> clone & render
+ * someone didn't like the idea of interface segregation
+ * so they put applybeak in here even though it doesn't belong
+ * they didn't want to write a different game class
+ */
 class Ball {
 protected:
     QBrush m_brush;
@@ -22,6 +30,9 @@ public:
         m_brush(colour), m_pos(position), m_velocity(velocity),
         m_mass(mass), m_radius(radius) {}
     Ball() {}
+	/**
+	 * @brief clone - creates an identical instance
+	 */
 	virtual Ball* clone() const = 0;
 
     /**

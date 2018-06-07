@@ -7,6 +7,10 @@
 
 class Ball;
 
+/**
+ * @brief The Table base class
+ * pure virtual -> clone & render
+ */
 class Table {
 protected:
     int m_width;
@@ -32,6 +36,10 @@ public:
     virtual bool sinks(Ball*) { return false; }
 };
 
+/**
+ * @brief The StageOneTable class
+ * does nothing special
+ */
 class StageOneTable : public Table
 {
 public:
@@ -45,6 +53,10 @@ public:
     void render(QPainter &painter, const QVector2D& offset) override;
 };
 
+/**
+ * @brief The StageTwoTable class
+ * keeps count of how many balls are in each pocket
+ */
 class StageTwoTable : public Table {
 protected:
     std::vector<Pocket*> m_pockets;

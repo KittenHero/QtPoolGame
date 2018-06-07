@@ -9,6 +9,10 @@
 #include "balldecorator.h"
 #include "utils.h"
 
+/**
+ * @brief The Game - (base)
+ * does physics
+ */
 class Game {
 protected:
     std::vector<Ball*>* m_balls;
@@ -97,6 +101,9 @@ public:
 	virtual void handleKeyEvent(QKeyEvent*) {}
 };
 
+/**
+ * @brief The StageThreeGame - can undo by pressing R
+ */
 class StageThreeGame : public Game, public Observer {
 protected:
 	struct GameState {
@@ -106,6 +113,7 @@ protected:
 	mutable std::vector<GameState> m_states;
 public:
 	StageThreeGame(Game* base);
+	~StageThreeGame();
 	void handleKeyEvent(QKeyEvent*) override;
 	void update(Subject *) override;
 	void saveState() const;

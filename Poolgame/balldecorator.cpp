@@ -35,7 +35,7 @@ void CueBall::mouseClickEvent(QMouseEvent* e) {
 void CueBall::mouseMoveEvent(QMouseEvent* e) {
     QVector2D p = QVector2D(e->pos());
 
-	if (isMoving()) {
+	if (isMoving() || !m_dragging) {
 		m_dragging = false;
         return;
     }

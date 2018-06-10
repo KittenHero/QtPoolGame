@@ -132,10 +132,6 @@ void BallGuide::render(QPainter& p) const {
 			p.setBrush(QColor(0, 0, 0, 0));
 			p.drawEllipse(cb->getPosition().toPointF(), shadow*4, shadow*4);
 
-			m_points.erase(std::find_if(m_points.cbegin(), m_points.cend(),
-				[cb, shadow](const QVector2D& pos){ return cb->getPosition().distanceToPoint(pos) <= shadow*4; }
-			), m_points.cend());
-
 			auto it = m_points.begin();
 			auto cur = cb->getPosition() + it->normalized() * shadow*4;
 
@@ -145,6 +141,11 @@ void BallGuide::render(QPainter& p) const {
 				p.drawEllipse(it->toPointF(), shadow, shadow);
 				cur = *it;
 			}
+
+			m_points.erase(std::find_if(m_points.cbegin(), m_points.cend(),
+				[cb, shadow](const QVector2D& pos){ return cb->getPosition().distanceToPoint(pos) <= shadow*4; }
+			), m_points.cend());
+
 			// restore coordinates and pens/brush settings
 			p.restore();
 		}

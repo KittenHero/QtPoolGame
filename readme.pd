@@ -45,6 +45,11 @@ expensive and cause more updates.
 Given that the project is in its final stage and there's only
 one subject and two observers, this is not a major concern in the code base.
 
+The extension is trajectory prediction while aiming and shooting the CueBall.
+It's activated by inputing a sequence of keys into the game at runtime.
+I had to leverage a non-trivial amount of math to implement the collision
+prediction (solving line intersection and using ray casting {In other words,
+we used coding and algorithms to make sure the objects don't run into each other}).
+
+
 ![](stage3.png){ width=100% }
-
-
